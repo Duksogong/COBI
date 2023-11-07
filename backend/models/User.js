@@ -50,17 +50,6 @@ const userSchema = mongoose.Schema({
 userSchema.pre('save', function( next ) {
     var user = this
 
-    Counter.findOne({ id: 0 }, (err, res) => {
-        if (err) return err;
-        let up = res.userIdCounter + 1;
-        Counter.updateOne({ id: 0 }, { userIdCounter: up }, (err) => {
-        if (err) return err;
-        User.updateOne({ email: user.email }, { userId: up }, (err) => {
-            if (err) return err;
-        });
-        });
-    });
-
     if(user.isModified('password')) {
         bcrypt.genSalt(saltRounds, function (err, salt) {
             if (err) return next(err)
@@ -73,10 +62,49 @@ userSchema.pre('save', function( next ) {
     } else {
         next()
     }
-
-
-
 })
+
+userSchema.post('save', function( result ) {
+    var user = this
+
+    if(user.userId === 0) {
+        Counter
+        .findOne({ id: 0 })
+        .then((rcd) => {
+            if(!rcd) return userSchema;
+            let origin = rcd.userIdCounter
+            let up = origin + 1
+            Counter
+            .findOneAndUpdate(
+                { id: 0 },
+                { userIdCounter: up }
+            )
+            .then((cnt) => {
+                User
+                .findOneAndUpdate(
+                    { email: user.email },
+                    { userId: up }
+                )
+                .then(() => {
+                    return userSchema;
+                })
+                .catch(() => {
+                    cnt.userIdCounter = origin
+                    return userSchema;
+                })
+            })
+            .catch(() => {
+                console.log("에러 :: backend/models/User.js - userSchema.post - [Counter의 userIdCounter 업데이트 실패]")
+                return userSchema;
+            })
+        })
+    } else {
+        console.log("에러 :: backend/models/User.js - userSchema.post - [!user.userId === 0]")
+        return userSchema;
+    }
+})
+
+
 
 userSchema.methods.comparePassword = function(plainPassword, cb) {
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
