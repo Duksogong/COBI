@@ -1,0 +1,5 @@
+1. backend/config/prod.js
+heroku 할 건지 (배포에 필요함. mongodb 접속하게 하려면)
+
+2. backend/models/Counter.js
+초기 설정으로, mongodb의 counters에서 초기값이 전부 int 0인 documents 하나 만들어 줘야함 (수동으로)
