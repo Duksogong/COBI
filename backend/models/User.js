@@ -7,7 +7,7 @@ const { Counter } = require("./Counter")
 const userSchema = mongoose.Schema({
     userId: {
         type: Number,
-        default: 0,
+        default: 0
     },
     nickname: {
         type: String, 
@@ -21,6 +21,14 @@ const userSchema = mongoose.Schema({
         unique: 1
     }, 
     password: {
+        type: String,
+        minlength: 5
+    },
+    new_password1: {
+        type: String,
+        minlength: 5
+    },
+    new_password2: {
         type: String,
         minlength: 5
     },
@@ -51,13 +59,12 @@ userSchema.pre('save', function( next ) {
     var user = this
 
     if(user.isModified('password')) {
-        bcrypt.genSalt(saltRounds, function (err, salt) {
-            if (err) return next(err)
-            bcrypt.hash(user.password, salt, function (err, hash) {
-                if (err) return next(err)
-                user.password = hash
-                next()
-            })
+        user.generateHash(user.password, (err, hash) => {
+            if(!hash) {
+                return;
+            }
+            user.password = hash
+            next()
         })
     } else {
         next()
@@ -99,17 +106,24 @@ userSchema.post('save', function( result ) {
             })
         })
     } else {
-        console.log("에러 :: backend/models/User.js - userSchema.post - [!user.userId === 0]")
         return userSchema;
     }
 })
-
-
 
 userSchema.methods.comparePassword = function(plainPassword, cb) {
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
         if(err) return cb(err)
         cb(null, isMatch)
+    })
+}
+
+userSchema.methods.generateHash = function(plainPassword, cb) {
+    bcrypt.genSalt(saltRounds, function (err, salt) {
+        if (err) return next(err)
+        bcrypt.hash(plainPassword, salt, function (err, hash) {
+            if (err) return cb(err)
+            cb(null, hash)
+        })
     })
 }
 
