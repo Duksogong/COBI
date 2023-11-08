@@ -157,6 +157,42 @@ app.post('/api/users/reset_password', auth, (req, res) => {
     });
 });
 
+app.post('/api/users/reset_nickname', auth, (req, res) => {
+  const newNickname = req.body.nickname;
+
+  // 닉네임이 이미 존재하는지 확인
+  User.findOne({ nickname: newNickname })
+    .then((existingUser) => {
+      if (existingUser) {
+        // 이미 존재하는 경우 오류 반환
+        console.log('이미 존재하는 nickname입니다.');
+        return res.json({ success: false, message: "이미 있는 nickname입니다." });
+      }
+
+      // 닉네임이 존재하지 않는 경우, 현재 사용자의 닉네임을 업데이트
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        { nickname: newNickname },
+        { new: true } // 업데이트된 문서를 반환하도록 설정
+      )
+        .then((updatedUser) => {
+          if (!updatedUser) {
+            return res.json({ success: false, message: "닉네임 변경을 실패했습니다." });
+          }
+          console.log('닉네임 변경 성공');
+          res.status(200).json({ success: true, message: "닉네임 변경 성공" });
+        })
+        .catch((err) => {
+          console.log('닉네임 변경 실패');
+          res.json({ success: false, message: "닉네임 변경을 실패했습니다.", error: err });
+        });
+    })
+    .catch((err) => {
+      console.log('User 접근 실패');
+      res.json({ checkSuccess: false, message: "User 접근에 실패했습니다.", error: err });
+    });
+});
+
 //===============================================================================
 
 app.listen(port, () => console.log(`Exmaple app listening on port ${port}!`))
