@@ -29,25 +29,18 @@ app.post('/api/users/register', (req, res) => {
   .save()
   .then(() => {
     // 사용자 등록 성공
-    return User.findOneAndUpdate(
-      { email: req.body.email },
-      { new_password1: req.body.password, new_password2: req.body.password }
-    );
-  })
-  .then(() => {
-    // 비밀번호 업데이트 성공
-    res.status(200).json({
-      success: true,
-      message: "등록 및 비밀번호 업데이트 성공"
-    });
+      res.status(200).json({
+          success: true,
+          message: "등록 및 비밀번호 업데이트 성공"
+      })
   })
   .catch((err) => {
     // 오류 처리
-    res.status(400).json({
-      success: false,
-      message: "등록 또는 비밀번호 업데이트 실패",
-      error: err
-    });
+      res.json({
+          success: false,
+          message: "등록 또는 비밀번호 업데이트 실패",
+          error: err
+      })
   })
 })
   
@@ -89,8 +82,6 @@ app.get('/api/users/auth', auth, (req, res) => {
     nickname : req.user.nickname,
     email : req.user.email,
     password : req.user.password,
-    new_password1 : req.user.new_password1,
-    new_password2 : req.user.new_password2,
     profile_image : req.user.profile_image,
     role : req.user.role
   })
@@ -113,27 +104,29 @@ app.get('/api/users/logout', auth, (req, res) => {
 })
 
 app.post('/api/users/reset_password', auth, (req, res) => {
-  User.findOne({ email: req.body.email })
+  const { password, newPW1, newPW2 } = req.body;
+
+  User.findOne({ userId: req.user.userId })
     .then((user) => {
       if (!user) {
         return res.json({ checkSuccess: false, message: "현재 유저 정보가 일치하지 않습니다." });
       }
-      user.comparePassword(req.body.password, (err, isMatch) => {
+
+      user.comparePassword(password, (err, isMatch) => {
         if (!isMatch) {
           return res.json({ checkSuccess: false, message: "현재 유저 정보가 일치하지 않습니다." });
         }
 
-        if (user.new_password1 !== req.body.new_password1) {
-          if (req.body.new_password1.length >= 8) {
-            if (req.body.new_password1 === req.body.new_password2) {
-              user.generateHash(req.body.new_password2, (err, hash) => {
+        if (password !== newPW1) {
+          if (newPW1.length >= 8) {
+            if (newPW1 === newPW2) {
+              user.generateHash(newPW2, (err, hash) => {
                 if (!hash) {
                   return res.json({ hashSetSuccess: false, message: "hash가 생성되지 않았습니다." });
                 }
-
                 User.findOneAndUpdate(
-                  { email: req.body.email },
-                  { password: hash, new_password1: req.body.new_password1, new_password2: req.body.new_password2 })
+                  { userId: req.user.userId },
+                  { password: hash })
                   .then(() => {
                     res.status(200).json({ hashSetSuccess: true, message: "비밀번호 및 새로운 비밀번호 설정 성공" })
                   })
@@ -171,7 +164,7 @@ app.post('/api/users/reset_nickname', auth, (req, res) => {
 
       // 닉네임이 존재하지 않는 경우, 현재 사용자의 닉네임을 업데이트
       User.findOneAndUpdate(
-        { _id: req.user._id },
+        { userId: req.user.userId },
         { nickname: newNickname },
         { new: true } // 업데이트된 문서를 반환하도록 설정
       )
