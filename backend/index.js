@@ -196,6 +196,19 @@ app.post('/api/users/select_category', auth, (req, res) => {
     });
 });
 
+app.post('/api/users/deselect_category', auth, (req, res) => {
+  const { userId, categoryId } = req.body;
+  
+  UserCategory.findOneAndDelete({ userId: userId, categoryId: categoryId })
+    .then(() => {
+      res.status(200).json({ success: true, message: 'Category deselected successfully.' });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal server error.' });
+    });
+});
+
 //===============================================================================
 
 app.listen(port, () => console.log(`Exmaple app listening on port ${port}!`))
