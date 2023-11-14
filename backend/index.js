@@ -11,6 +11,7 @@ mongoose.connect(config.mongoURI)
 
 const { User } = require("./models/User")
 const { UserCategory } = require("./models/UserCategory")
+const { Bookmark } = require("./models/Bookmark")
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true}))
@@ -202,6 +203,37 @@ app.post('/api/users/deselect_category', auth, (req, res) => {
   UserCategory.findOneAndDelete({ userId: userId, categoryId: categoryId })
     .then(() => {
       res.status(200).json({ success: true, message: 'Category deselected successfully.' });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal server error.' });
+    });
+});
+
+app.post('/api/users/select_bookmark', auth, (req, res) => {
+  const { userId, reviewId } = req.body;
+
+  const bookmark = new Bookmark({
+    userId: userId,
+    reviewId: reviewId
+  });
+
+  bookmark.save()
+    .then(() => {
+      res.status(200).json({ success: true, message: 'Bookmark selected successfully.' });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal server error.' });
+    });
+});
+
+app.post('/api/users/deselect_bookmark', auth, (req, res) => {
+  const { userId, reviewId } = req.body;
+  
+  Bookmark.findOneAndDelete({ userId: userId, reviewId: reviewId })
+    .then(() => {
+      res.status(200).json({ success: true, message: 'Bookmark deselected successfully.' });
     })
     .catch((error) => {
       console.error(error);
