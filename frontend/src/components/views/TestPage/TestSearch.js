@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function TestSearchPage() {
+  const navigate = useNavigate()
+
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState([])
 
@@ -18,23 +21,29 @@ function TestSearchPage() {
     }
 
     //axios를 사용하여 네이버 검색 API 요청
-    axios.get('/api/search/book', {
+    axios.get('/api/search/book/title', {
       params: {
         query: searchText
       }
     })
-    .then(response => {
-      setSearchResults(response.data.items)
-      alert("검색 완료")
-    })
-    .catch(err => {
-      alert(err)
-    })
+      .then(response => {
+        setSearchResults(response.data.items)
+        alert("검색 완료")
+      })
+      .catch(err => {
+        alert(err)
+      })
+  }
+
+  const onClickHandler = (event, index) => {
+    event.preventDefault()
+
+    navigate('/test/searchReviews', { state: searchResults[index] })
   }
 
   //검색 결과가 변경될 때 마다...
   useEffect(() => {
-    console.log(searchResults)
+    console.log(`${searchText} 검색`)
   }, [searchResults])
 
   return (
@@ -52,7 +61,7 @@ function TestSearchPage() {
 
       <div className="recyclerView">
         {searchResults.map((result, index) => (
-          <div key={index} className="item" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <div key={index} onClick={(event) => onClickHandler(event, index)} className="item" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <img style={{height: '100px', margin: '10px'}} src={result.image}/>
             <h4>{result.title}</h4>
             <p style={{margin: '0px 10px'}}>작가 | {result.author}</p>
