@@ -29,7 +29,8 @@ app.get('/', (req, res) => {res.send('Hello World!')})
 app.get('/api/axios', (req, res) => {res.send("AXIOS testing success")})
 
 app.post('/api/users/register', (req, res) => {
-  const user = new User(req.body)
+  const { email, password, confirmPassword } = req.body;
+
 
   user
   .save()
@@ -49,6 +50,7 @@ app.post('/api/users/register', (req, res) => {
     })
   })
 })
+
   
 app.post('/api/users/login', (req, res) => {
   User
