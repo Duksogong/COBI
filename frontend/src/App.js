@@ -1,16 +1,28 @@
-import { Routes, Route } from "react-router-dom"
+import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
-import TestSearch from './components/views/TestPage/TestSearch'
+import TestSearch from './components/views/TestPage/TestSearch';
 import TestSearchReviews from "./components/views/TestPage/TestSearchReviews";
+
+import LandingPage from './components/views/LandingPage/LandingPage';
+import LoginPage from './components/views/LoginPage/LoginPage';
+import RegisterPage from './components/views/RegisterPage/RegisterPage';
+import ChangeNicknamePage from './components/views/ChangePage/ChangeNicknamePage';
 
 function App() {
   return (
-    <div>
+    <BrowserRouter>
       <Routes>
         <Route exact path="/test/search" Component={TestSearch} />
         <Route exact path="/test/searchReviews" Component={TestSearchReviews} />
+          
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        <Route path="/change_nickname" element={<ChangeNicknamePage />} />"
       </Routes>
-    </div>
+    </BrowserRouter>
   );
 }
 
