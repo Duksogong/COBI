@@ -21,7 +21,7 @@ mongoose.connect(config.mongoURI, {
   .catch(err => console.log(err))
 
 //모델
-//const review = require('./models/Review')
+const { Review } = require('./models/Review')
 
 //네이버 검색 API - 도서
 var client_id = 'EjE7zz7rypVA9GC28VpF'
@@ -78,7 +78,7 @@ app.get('/api/category', (req, res) => {
 app.post('/api/search/review', async (req, res) => {
   try {
     //요청된 iban과 일치하는 감상평 목록
-    const reviews = await review.find({ isbn: req.body.isbn }).exec()
+    const reviews = await Review.find({ isbn: req.body.isbn }).exec()
 
     if(!reviews || reviews.length === 0) {
       return res.json({ message: 'No reviews found for the given ISBN.' })
