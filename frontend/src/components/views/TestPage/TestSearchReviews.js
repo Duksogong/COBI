@@ -9,8 +9,10 @@ function TestSearchReviews() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.post('/api/search/review', {
-        "isbn": state.isbn
+      const response = await axios.get('/api/search/review', {
+        params: {
+          query: state.isbn
+        }
       })
       setReviewList(response.data)
     }
@@ -32,7 +34,7 @@ function TestSearchReviews() {
 
       <div className="recyclerView">
         {reviewList.map((result, index) => (
-          <div key={index} className="item" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div key={index} className="item" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <h4>{result.title}</h4>
             <p style={{margin: '0px 10px'}}>{result.review}</p>
           </div>
