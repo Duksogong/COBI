@@ -22,11 +22,6 @@ app.use("/api/search", searchRoutes);
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/api/review", reviewRoutes);
 
-//서버 실행
-app.listen(port, () => {
-    console.log(`app listening on port ${port}`);
-});
-
 const { User } = require("./models/User");
 const { UserCategory } = require("./models/UserCategory");
 const { Bookmark } = require("./models/Bookmark");
