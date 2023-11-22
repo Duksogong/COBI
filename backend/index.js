@@ -24,6 +24,10 @@ const { auth } = require('./middleware/auth')
 
 //===============================================================================
 
+app.get('/', (req, res) => {res.send('Hello World!')})
+
+app.get('/api/axios', (req, res) => {res.send("AXIOS testing success")})
+
 app.post('/api/users/register', (req, res) => {
   const user = new User(req.body)
 
@@ -53,7 +57,7 @@ app.post('/api/users/login', (req, res) => {
     if(!user){
       return res.json({
         loginSuccess: false,
-        messsage: "제공된 이메일에 해당하는 유저가 없습니다."
+        message: "제공된 이메일에 해당하는 유저가 없습니다."
       })
     }
     user.comparePassword(req.body.password, (err, isMatch) => {
