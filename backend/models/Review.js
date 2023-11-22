@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-const sallRounds = 10;
 
 const ReviewSchema = mongoose.Schema(
     {
-        bookname: {
+        title: {
             type: String,
             maxLength: 50,
         },
@@ -22,16 +21,9 @@ const ReviewSchema = mongoose.Schema(
         review: {
             type: String,
         },
-        // created_at: {
-        //     type: Date,
-        //     maxLength: 6,
-        // },
-        // updated_at: {
-        //     type: Date,
-        //     maxLength: 6,
-        // },
-
+        images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }],
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
