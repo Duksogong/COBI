@@ -98,13 +98,13 @@ userSchema.statics.findByToken = function(token) {
             }
             user
             .findOne({"_id" : decoded, "token" : token})
-            .then(user => {
-                if (!user) {reject('User not found')}
-                resolve(user)
-            })    
-            .catch(err => {
-                reject(err)
-            })
+                .then(user => {
+                    if (!user) {reject('User not found')}
+                    resolve(user)
+                })    
+                .catch(err => {
+                    reject(err)
+                })
         })
     })
 }

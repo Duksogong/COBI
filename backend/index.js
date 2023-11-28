@@ -8,6 +8,10 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+//cookieParser
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+
 //mongoose 연결
 const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI)
@@ -18,17 +22,18 @@ mongoose.connect(config.mongoURI)
 const searchRoutes = require('./routes/searchRoutes')
 app.use('/api/search', searchRoutes)
 
+const bookshelfRoutes = require('./routes/bookshelfRoutes')
+app.use('/api/bookshelf', bookshelfRoutes)
+
 //서버 실행
 app.listen(port, () => {
   console.log(`app listening on port ${port}`)
 })
 
+
 const { User } = require("./models/User")
 const { UserCategory } = require("./models/UserCategory")
 const { Bookmark } = require("./models/Bookmark")
-
-const cookieParser = require('cookie-parser')
-app.use(cookieParser())
 
 const { auth } = require('./middleware/auth')
 
@@ -39,11 +44,11 @@ app.get('/', (req, res) => {res.send('Hello World!')})
 app.get('/api/axios', (req, res) => {res.send("AXIOS testing success")})
 
 app.post('/api/users/register', (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  //const { email, password, confirmPassword } = req.body;
 
+  const user = new User(req.body)
 
-  user
-  .save()
+  user.save()
   .then(() => {
     // 사용자 등록 성공
     res.status(200).json({
