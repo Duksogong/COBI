@@ -23,10 +23,12 @@ router.get('/book/title', (req, res) => {
 
   axios.get(api_url, { headers })
     .then(response => {
-      res.status(200).json(response.data)
+      res.status(200).json({
+        success: true,
+        result: response.data,
+      })
     })
     .catch(err => {
-      console.error(err)
       res.status(500).json({ error: 'Internal Server Error' })
     })
 })
@@ -38,10 +40,12 @@ router.get('/book/isbn', (req, res) => {
 
   axios.get(api_url, { headers })
     .then(response => {
-      res.status(200).json(response.data)
+      res.status(200).json({
+        success: true,
+        result: response.data
+      })
     })
     .catch(err => {
-      console.error(err)
       res.status(500).json({ error: 'Internal Server Error' })
     })
 })
@@ -65,9 +69,16 @@ router.get('/review', (req, res) => {
   Review.find({ isbn: req.query.query })
     .then((reviews) => {
       if(!reviews || reviews.length === 0) {
-        return res.json({ message: 'No reviews found for the given ISBN.' })
+        return res.json({ 
+          success: true,
+          result: null,
+          message: 'No reviews found for the given ISBN.' 
+        })
       } else {
-        return res.json(reviews)
+        return res.json({
+          success: true,
+          result: reviews
+        })
       }
     })
     .catch((err) => {

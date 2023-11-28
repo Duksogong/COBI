@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { searchBook, searchReview } from "../../../_actions/search_action"
 
 function TestSearchPage() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState([])
@@ -20,31 +22,30 @@ function TestSearchPage() {
       return
     }
 
-    //axios를 사용하여 네이버 검색 API 요청
-    axios.get('/api/search/book/title', {
-      params: {
-        query: searchText
-      }
-    })
+    let body = {
+      query: searchText,
+    }
+
+    dispatch(searchBook(body))
       .then(response => {
-        setSearchResults(response.data.items)
-        alert("검색 완료")
-      })
-      .catch(err => {
-        alert(err)
+        if(response.payload.success) {
+          setSearchResults(response.payload.result.items)
+        } 
       })
   }
 
   const onClickHandler = (event, index) => {
     event.preventDefault()
 
-    navigate('/test/searchReviews', { state: searchResults[index] })
-  }
+    let book = searchResults[index]
 
-  //검색 결과가 변경될 때 마다...
-  useEffect(() => {
-    console.log(`${searchText} 검색`)
-  }, [searchResults])
+    dispatch(searchReview(book))
+      .then(response => {
+        if(response.payload.success) {
+          navigate('/test/searchReviews')
+        }
+      })
+  }
 
   return (
     <div style={{

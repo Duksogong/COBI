@@ -256,7 +256,3 @@ app.post('/api/users/deselect_bookmark', auth, (req, res) => {
       res.status(500).json({ success: false, message: 'Internal server error.' });
     });
 });
-
-//===============================================================================
-
-app.listen(port, () => console.log(`Exmaple app listening on port ${port}!`))
