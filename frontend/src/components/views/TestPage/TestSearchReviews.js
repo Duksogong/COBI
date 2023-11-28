@@ -17,12 +17,18 @@ function TestSearchReviews() {
       </div>
 
       <div className="recyclerView">
-        {reviewList.map((result, index) => (
-          <div key={index} className="item" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <h4>{result.title}</h4>
-            <p style={{margin: '0px 10px'}}>{result.review}</p>
+        {reviewList.length === 0 ? (
+          <div style={{textAlign: 'center'}}>
+            <p>검색된 작품이 없습니다.</p>
           </div>
-        ))}
+        ) : (
+          reviewList.map((result, index) => (
+            <div key={index} className="item" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <h4>{result.title}</h4>
+              <p style={{margin: '0px 10px'}}>{result.review}</p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

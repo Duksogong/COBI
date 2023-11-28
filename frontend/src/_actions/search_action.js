@@ -15,7 +15,6 @@ export function searchBook(dataToSubmit) {
 }
 
 export function searchReview(dataToSubmit) {
-  console.log(dataToSubmit.isbn)
   const request = axios.get('/api/search/review', { 
     params: {
       query: dataToSubmit.isbn

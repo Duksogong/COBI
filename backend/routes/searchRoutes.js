@@ -71,7 +71,7 @@ router.get('/review', (req, res) => {
       if(!reviews || reviews.length === 0) {
         return res.json({ 
           success: true,
-          result: null,
+          result: [],
           message: 'No reviews found for the given ISBN.' 
         })
       } else {

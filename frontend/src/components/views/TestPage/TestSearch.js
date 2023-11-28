@@ -8,7 +8,7 @@ function TestSearchPage() {
   const dispatch = useDispatch()
 
   const [searchText, setSearchText] = useState("")
-  const [searchResults, setSearchResults] = useState([])
+  const [searchResults, setSearchResults] = useState(["none"])
 
   const onSearchTextHandler = (event) => {
     setSearchText(event.currentTarget.value)
@@ -61,7 +61,13 @@ function TestSearchPage() {
       </form>
 
       <div className="recyclerView">
-        {searchResults.map((result, index) => (
+        {searchResults[0] !== "none" && searchResults.length === 0 && (
+          <div style={{textAlign: 'center'}}>
+            <p>검색된 작품이 없습니다.</p>
+          </div>
+        )}
+
+        {searchResults[0] !== "none" && searchResults.length > 0 && searchResults.map((result, index) => (
           <div key={index} onClick={(event) => onClickHandler(event, index)} className="item" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <img style={{height: '100px', margin: '10px'}} src={result.image}/>
             <h4>{result.title}</h4>
