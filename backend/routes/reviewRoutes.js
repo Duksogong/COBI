@@ -161,4 +161,36 @@ router.patch("/:reviewId", upload.array("images", 3), async (req, res) => {
     }
 });
 
+// 리뷰 삭제
+router.delete("/:reviewId", async (req, res) => {
+    const { reviewId } = req.params;
+    try {
+        // 리뷰를 찾아서 삭제
+        const deletedReview = await Review.findByIdAndDelete(reviewId);
+
+        if (!deletedReview) {
+            return res.status(404).json({
+                success: false,
+                error: "Review not found",
+            });
+        }
+
+        // 삭제된 리뷰의 이미지 ID 배열 가져오기
+        const deletedImageIds = deletedReview.images;
+
+        // 이미지 삭제
+        await Image.deleteMany({ _id: { $in: deletedImageIds } });
+
+        return res.status(200).json({
+            success: true,
+            message: "Review deleted successfully",
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+});
+
 module.exports = router;
