@@ -66,4 +66,51 @@ router.post("/", upload.array("images", 3), async (req, res) => {
     }
 });
 
+// 로그인한 사용자의 리뷰 조회
+router.get("/user", async (req, res) => {
+    try {
+        // req.user에서 사용자 정보를 가져온다고 가정
+        const userId = req.user._id; // 또는 다른 사용자 식별자
+
+        // 해당 사용자의 리뷰 조회
+        const userReviews = await Review.find({ user: userId }).populate(
+            "category images"
+        );
+
+        return res.status(200).json({
+            success: true,
+            reviews: userReviews,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+});
+
+// 특정 리뷰 조회
+router.get("/:reviewId", async (req, res) => {
+    const { reviewId } = req.params;
+    try {
+        const review = await Review.findById(reviewId).populate(
+            "user category images"
+        );
+        if (!review) {
+            return res.status(404).json({
+                success: false,
+                error: "Review not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            review,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+});
 module.exports = router;
