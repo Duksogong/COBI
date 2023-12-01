@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-//import { myBookmark } from "../../../_actions/bookmark_action";
 
 function MyBookmarkPage() {
   const navigate = useNavigate();
@@ -81,6 +80,11 @@ function MyBookmarkPage() {
   /* 감상평 데이터 */
   console.log("감상평 데이터: ", reviews);
 
+  const handleReviewClick = (reviewId) => {
+    // 리뷰 클릭 시 리뷰 상세 페이지로 이동
+    navigate(`/review_detail/${reviewId}`);
+  };
+
   // 북마크된 리뷰 object가져오기
   useEffect(() => {
     selectedBookMarks.map(s => {
@@ -99,34 +103,28 @@ function MyBookmarkPage() {
     // ==========================================================
 
   return (
-    <div style={{ 
-    //   display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', height: '100vh'
-    }}>
+    <div style={{ width: '100%', height: '100vh'}}>
       
       <h4>내 책갈피</h4>
       <hr/>
 
       <div>
         {details.map((reviewO, index) => (
-          <div key={index} type="submit" style={{ backgroundColor: 'mistyrose', margin:'2px'}}>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 3, marginRight: '10px', backgroundColor: 'aliceblue' }}>
-                    <div style={{fontSize:'10px'}}>이미지</div>
-                </div>
-                <div style={{ flex: 5 }}>
-                    <div style={{ fontSize:'10px'}}>책 제목 : {reviewO.bookname}</div>
-                    <div style={{ fontSize:'10px'}}>글 제목 : {reviewO.title}</div>
-                </div>
+          <div key={index} type="submit" style={{ backgroundColor: 'mistyrose', margin:'2px', cursor: 'pointer',}} 
+          onClick={() => handleReviewClick(reviewO._id)}
+          >
+            <div>
+              <div style={{ fontSize:'10px'}}>책 제목 : {reviewO.bookname}</div>
+              <div style={{ fontSize:'10px'}}>글 제목 : {reviewO.title}</div>
             </div>
             <div>
-            <small style={{ fontSize: '10px' }}>
+              <small style={{ fontSize: '10px' }}>
                 작성자 닉네임: {
-                    users.find(user => user._id === reviewO.user)
-                    ? users.find(user => user._id === reviewO.user).nickname
-                    : '미정'
+                  users.find(user => user._id === reviewO.user)
+                  ? users.find(user => user._id === reviewO.user).nickname
+                  : 'unkown'
                 }
-                </small>
+              </small>
             </div>
           </div>
         ))}
