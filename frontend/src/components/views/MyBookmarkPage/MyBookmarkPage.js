@@ -80,9 +80,9 @@ function MyBookmarkPage() {
   /* 감상평 데이터 */
   console.log("감상평 데이터: ", reviews);
 
-  const handleReviewClick = (reviewId) => {
+  const handleReviewClick = (reviewId, currentUser) => {
     // 리뷰 클릭 시 리뷰 상세 페이지로 이동
-    navigate(`/review_detail/${reviewId}`);
+    navigate(`/review_detail/${reviewId}/${currentUser}`);
   };
 
   // 북마크된 리뷰 object가져오기
@@ -111,10 +111,10 @@ function MyBookmarkPage() {
       <div>
         {details.map((reviewO, index) => (
           <div key={index} type="submit" style={{ backgroundColor: 'mistyrose', margin:'2px', cursor: 'pointer',}} 
-          onClick={() => handleReviewClick(reviewO._id)}
+          onClick={() => handleReviewClick(reviewO._id, currentUser._id)}
           >
             <div>
-              <div style={{ fontSize:'10px'}}>책 제목 : {reviewO.bookname}</div>
+              <div style={{ fontSize:'10px'}}>책 제목 : {reviewO?.bookname}</div>
               <div style={{ fontSize:'10px'}}>글 제목 : {reviewO?.title}</div>
             </div>
             <div>

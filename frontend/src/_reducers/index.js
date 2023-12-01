@@ -4,6 +4,7 @@ import user from './user_reducer';
 import nickname from './nickname_reducer';
 import password from './password_reducer';
 import category from './category_reducer';
+import bookmark from './bookmark_reducer';
 //import commnet from './commnet_reducer';
 
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     nickname,
     password,
     category,
+    bookmark,
     //commnet
 })
 
