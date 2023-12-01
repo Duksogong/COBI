@@ -7,7 +7,13 @@ import TestSearchReviews from "./components/views/TestPage/TestSearchReviews";
 import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
 import RegisterPage from './components/views/RegisterPage/RegisterPage';
+
 import ChangeNicknamePage from './components/views/ChangePage/ChangeNicknamePage';
+import ChangePasswordPage from './components/views/ChangePage/ChangePasswordPage';
+
+import ChangeCategoryPage from './components/views/CategoryPage/CategoryPage';
+
+import MyBookmarkPage from './components/views/MyBookmarkPage/MyBookmarkPage';
 
 function App() {
   return (
@@ -21,6 +27,11 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
 
         <Route path="/change_nickname" element={<ChangeNicknamePage />} />"
+        <Route path="/change_password" element={<ChangePasswordPage />} />"
+
+        <Route path="/change_category" element={<ChangeCategoryPage />} />"
+
+        <Route path="/my_bookmark" element={<MyBookmarkPage />} />"
       </Routes>
     </BrowserRouter>
   );

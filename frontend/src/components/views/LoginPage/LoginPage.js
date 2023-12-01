@@ -29,10 +29,10 @@ function LoginPage() {
 
     dispatch(loginUser(body))
     .then( response => {
-      if(response.payload.loginSuccess) {
+      if(response.payload.success) {
         navigate('/');
       } else {
-        alert('Error');
+        alert('로그인 실패');
       }
     });
 

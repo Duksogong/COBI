@@ -26,6 +26,7 @@ const { User } = require("./models/User");
 const { UserCategory } = require("./models/UserCategory");
 const { Bookmark } = require("./models/Bookmark");
 const { Category } = require("./models/Category");
+const { Review } = require("./models/Review");
 
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
@@ -299,6 +300,26 @@ app.post("/api/users/deselect_category", auth, (req, res) => {
             });
         });
 });
+
+app.get("/api/users/review", (req, res) => {
+    Review.find({})
+        .then(reviews => {
+            res.json(reviews);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
+})
+
+app.get("/api/users/bookmark", (req, res) => {
+    Bookmark.find({})
+        .then(bookmarks => {
+            res.json(bookmarks);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
+})
 
 app.post("/api/users/select_bookmark", auth, (req, res) => {
     const { userId, reviewId } = req.body;
