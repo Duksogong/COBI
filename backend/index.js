@@ -25,6 +25,7 @@ app.use("/api/review", reviewRoutes);
 const { User } = require("./models/User");
 const { UserCategory } = require("./models/UserCategory");
 const { Bookmark } = require("./models/Bookmark");
+const { Category } = require("./models/Category");
 
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
@@ -40,6 +41,16 @@ app.get("/", (req, res) => {
 app.get("/api/axios", (req, res) => {
     res.send("AXIOS testing success");
 });
+
+app.get("/api/users", (req, res) => {
+    User.find({})
+        .then(users => {
+            res.json(users);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
+})
 
 app.post("/api/users/register", (req, res) => {
     const user = new User(req.body)
@@ -224,6 +235,26 @@ app.post("/api/users/reset_nickname", auth, (req, res) => {
             });
         });
 });
+
+app.get("/api/users/categories", (req, res) => {
+    Category.find({})
+        .then(categories => {
+            res.json(categories);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
+})
+
+app.get("/api/users/user_categories", (req, res) => {
+    UserCategory.find({})
+        .then(user_categories => {
+            res.json(user_categories);
+        })
+        .catch(err => {
+            res.status(500).send(err);
+        });
+})
 
 app.post("/api/users/select_category", auth, (req, res) => {
     const { userId, categoryId } = req.body;
