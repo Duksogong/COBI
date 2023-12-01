@@ -125,7 +125,7 @@ app.get("/api/users/logout", auth, (req, res) => {
             });
         })
         .catch((err) => {
-            res.json({ success: false, err });
+            res.status(500).json({ success: false, error: err.message });
         });
 });
 

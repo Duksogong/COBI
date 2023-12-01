@@ -15,7 +15,7 @@ function LandingPage() {
   const onClickHandler = () => {
     axios.get(`/api/users/logout`)
     .then(response => {
-      if (response.payload.success) {
+      if (response.data.success) {
         navigate('/login')
       } else {
         alert("로그아웃하는데 실패했습니다.")
