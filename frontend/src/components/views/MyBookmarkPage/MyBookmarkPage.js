@@ -115,7 +115,7 @@ function MyBookmarkPage() {
           >
             <div>
               <div style={{ fontSize:'10px'}}>책 제목 : {reviewO.bookname}</div>
-              <div style={{ fontSize:'10px'}}>글 제목 : {reviewO.title}</div>
+              <div style={{ fontSize:'10px'}}>글 제목 : {reviewO?.title}</div>
             </div>
             <div>
               <small style={{ fontSize: '10px' }}>
