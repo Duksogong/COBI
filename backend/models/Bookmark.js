@@ -7,11 +7,9 @@ let bookmarkSchema = mongoose.Schema({
         required: true,
     },
     reviewId : {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: 'Review',
-        // required: true,
-        type : String,
-        default : "글 1의 ObjectId"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+        required: true,
     }
 });
 
