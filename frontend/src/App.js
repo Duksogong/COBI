@@ -35,7 +35,7 @@ function App() {
 
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
 
-        <Route path="/review_detail/:reviewId" element={<ReviewDetailPage />} />
+        <Route path="/review_detail/:reviewId/:currentUser" element={<ReviewDetailPage />} />
       </Routes>
     </BrowserRouter>
   );
