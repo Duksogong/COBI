@@ -39,8 +39,10 @@ function ChangeNicknamePage() {
   }}>
     <form style={{display: 'flex', flexDirection: 'column'}}
       onSubmit={onSubmitHandler}>
+
       <label>new nickname</label>
       <input type="text" value={Nickname} onChange={onNicknameHandler} />
+      
       <br />
       <button type="submit">
         Change
