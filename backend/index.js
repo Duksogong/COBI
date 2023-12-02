@@ -8,6 +8,10 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//cookieParser
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+
 //mongoose 연결
 const mongoose = require("mongoose");
 mongoose
@@ -19,8 +23,13 @@ mongoose
 const searchRoutes = require("./routes/searchRoutes");
 app.use("/api/search", searchRoutes);
 
-const reviewRoutes = require("./routes/reviewRoutes");
-app.use("/api/review", reviewRoutes);
+const userRoutes = require('./routes/userRoutes')
+app.use('/api/users', userRoutes)
+
+//서버 실행
+app.listen(port, () => {
+  console.log(`app listening on port ${port}`)
+})
 
 const { User } = require("./models/User");
 const { UserCategory } = require("./models/UserCategory");
@@ -423,8 +432,3 @@ app.post("/api/comments", (req, res) => {
   });
   
   module.exports = router;
-  
-
-//===============================================================================
-
-app.listen(port, () => console.log(`Exmaple app listening on port ${port}!`));

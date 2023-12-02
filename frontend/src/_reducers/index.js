@@ -7,9 +7,12 @@ import category from './category_reducer';
 import bookmark from './bookmark_reducer';
 //import commnet from './commnet_reducer';
 
+import search from './search_reducer';
+
 const rootReducer = combineReducers({
     user,
     nickname,
+    search,
     password,
     category,
     bookmark,
