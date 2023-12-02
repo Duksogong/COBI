@@ -30,6 +30,8 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 const { auth } = require("./middleware/auth");
+const { Comment } = require("./Comment.js"); // 이거 왜 ./models/Comment라고 하면 빨간줄 뜨지
+const { Reply } = require("./models/Reply");
 
 //===============================================================================
 
@@ -331,6 +333,64 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
             });
         });
 });
+
+app.post("/api/comments", (req, res) => {
+    const { author, content } = req.body;
+  
+    const newComment = new Comment({
+      author,
+      content,
+      timestamp: new Date().toISOString(),
+    });
+  
+    newComment
+      .save()
+      .then((comment) => {
+        res.json({ success: true, comment });
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ success: false, message: "내부 서버 오류." });
+      });
+  });
+
+  router.post("/api.comments/:commentId/replies", (req, res) => {
+    const { commentId } = req.params;
+    const { author, content } = req.body;
+  
+    const newReply = new Reply({
+      commentId,
+      author,
+      content,
+      timestamp: new Date().toISOString(),
+    });
+  
+    newReply
+      .save()
+      .then((reply) => {
+        // 답글을 해당 댓글에 추가
+        Comment.findByIdAndUpdate(
+          commentId,
+          { $push: { replies: reply._id } },
+          { new: true }
+        )
+          .exec()
+          .then((comment) => {
+            res.json({ success: true, comment });
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).json({ success: false, message: "내부 서버 오류." });
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ success: false, message: "내부 서버 오류." });
+      });
+  });
+  
+  module.exports = router;
+  
 
 //===============================================================================
 
