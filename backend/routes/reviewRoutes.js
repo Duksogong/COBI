@@ -184,16 +184,24 @@ router.patch(
 );
 
 // 리뷰 삭제
-router.delete("/:reviewId", async (req, res) => {
+router.delete("/:reviewId", auth, async (req, res) => {
     const { reviewId } = req.params;
     try {
         // 리뷰를 찾아서 삭제
-        const deletedReview = await Review.findByIdAndDelete(reviewId);
+        const deletedReview = await Review.findById(reviewId);
 
         if (!deletedReview) {
             return res.status(404).json({
                 success: false,
                 error: "Review not found",
+            });
+        }
+
+        // 작성자 확인
+        if (deletedReview.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                error: "Unauthorized. You are not the author of this review.",
             });
         }
 
