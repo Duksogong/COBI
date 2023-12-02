@@ -99,7 +99,7 @@ function CategoryPage() {
     dispatch(selectCategory(body))
     .then( response => {
       if(response.payload.success) {
-        navigate('/');
+        navigate('/change_category');
       } else {
         alert('카테고리 선택 실패');
       }
@@ -119,7 +119,7 @@ function CategoryPage() {
     dispatch(deselectCategory(body))
     .then( response => {
       if(response.payload.success) {
-        navigate('/');
+        navigate('/change_category');
       } else {
         alert('카테고리 삭제 실패');
       }
