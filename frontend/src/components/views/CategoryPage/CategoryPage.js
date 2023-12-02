@@ -154,6 +154,17 @@ function CategoryPage() {
     }
   };
 
+  const onClickHandler = () => {
+    axios.get(`/api/users/logout`)
+    .then(response => {
+      if (response.data.success) {
+        navigate('/login')
+      } else {
+        alert("로그아웃하는데 실패했습니다.")
+      }
+    })
+  }
+
 
   return (
     <div>
@@ -167,6 +178,8 @@ function CategoryPage() {
         <div onClick={() => { navigate(`/change_nickname`); }}>
           닉네임 변경
         </div>
+
+        <br/> 
 
         <div onClick={() => { navigate(`/change_password`); }}>
           비밀번호 변경
@@ -196,6 +209,13 @@ function CategoryPage() {
             </button>
           ))}
         </div>
+
+        <hr/> 
+
+        <button onClick={onClickHandler}>
+          로그아웃
+        </button>
+
       </div>
 
       
