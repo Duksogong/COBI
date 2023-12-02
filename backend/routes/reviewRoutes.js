@@ -66,15 +66,17 @@ router.post("/", auth, upload.array("images", 3), async (req, res) => {
 });
 
 // 로그인한 사용자의 리뷰 조회
-router.get("/user", async (req, res) => {
+router.get("/user", auth, async (req, res) => {
+    const userId = req.user._id;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
     try {
-        // req.user에서 사용자 정보를 가져온다고 가정
-        const userId = req.user._id; // 또는 다른 사용자 식별자
-
         // 해당 사용자의 리뷰 조회
-        const userReviews = await Review.find({ user: userId }).populate(
-            "category images"
-        );
+        const userReviews = await Review.find({ user: userId });
 
         return res.status(200).json({
             success: true,
