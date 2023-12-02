@@ -10,7 +10,6 @@ function LandingPage() {
     axios.get('/api/axios')
     .then(response => {console.log(response.data)})
   }, [])
-  
 
   const onClickHandler = () => {
     axios.get(`/api/users/logout`)
