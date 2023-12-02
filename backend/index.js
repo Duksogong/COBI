@@ -22,8 +22,8 @@ mongoose.connect(config.mongoURI)
 const searchRoutes = require('./routes/searchRoutes')
 app.use('/api/search', searchRoutes)
 
-const bookshelfRoutes = require('./routes/bookshelfRoutes')
-app.use('/api/bookshelf', bookshelfRoutes)
+const userRoutes = require('./routes/userRoutes')
+app.use('/api/users', userRoutes)
 
 //서버 실행
 app.listen(port, () => {

@@ -9,20 +9,14 @@ const { auth } = require('../middleware/auth')
 const { Review } = require('../models/Review')
 
 //사용자 감상평 불러오기
-router.get('/', auth, (req, res) => {
-  Review.find({ user: req.user._id })
+router.get('/review', auth, (req, res) => {
+  //최신순으로 정렬하여 전달
+  Review.find({ user: req.user._id }).sort({created_at: -1})
     .then((reviews) => {
       if(!reviews || reviews.length === 0) {
-        return res.json({ 
-          success: true,
-          result: [],
-          message: 'No reviews found for the given userId.' 
-        })
+        return res.json({})
       } else {
-        return res.json({
-          success: true,
-          result: reviews
-        })
+        return res.json(reviews)
       }
     })
     .catch((err) => {
