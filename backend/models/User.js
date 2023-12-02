@@ -12,8 +12,7 @@ const userSchema = mongoose.Schema({
     nickname: {
         type: String, 
         trim: true,
-        maxlength: 50,
-        unique: 1
+        maxlength: 50
     }, 
     password: {
         type: String,
