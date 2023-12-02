@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { selectCategory } from "../../../_actions/category_actions";
 import { deselectCategory } from "../../../_actions/category_actions";
 
+import NavBar from '../NavBar/NavBar'; // 상대 경로에 주의하여 수정
+import Footer from '../Footer/Footer';
+
 function CategoryPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -153,12 +156,24 @@ function CategoryPage() {
 
 
   return (
-    <div style={{ 
+    <div>
+      <NavBar />
+
+      <div style={{ 
       display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', height: '100vh'
-    }}>
-      
-      <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={onAddCategory}>
+      width: '100%', minHeight: '32rem', flexDirection: 'column'
+      }}>
+
+        <div onClick={() => { navigate(`/change_nickname`); }}>
+          닉네임 변경
+        </div>
+
+        <div onClick={() => { navigate(`/change_password`); }}>
+          비밀번호 변경
+        </div>
+        
+        <form onSubmit={onAddCategory}>
+        <hr/> 
         <label>Category</label>
         <select value={selectedCategory} onChange={onCategoryChange}>
           {categories.map(category => (
@@ -171,17 +186,20 @@ function CategoryPage() {
           추가
         </button>
         <hr/>
-      </form>
+        </form>
 
-      {/* selectedUserCategories 값들을 버튼으로 표시 */}
-      <div>
-        {selectedUserCategories.map((categoryId, index) => (
-          <button key={index} type="submit" onClick={() => onDeleteCategory(categoryId)}>
-            {getCategoryName(categoryId)}
-          </button>
-        ))}
+        {/* selectedUserCategories 값들을 버튼으로 표시 */}
+        <div>
+          {selectedUserCategories.map((categoryId, index) => (
+            <button key={index} type="submit" onClick={() => onDeleteCategory(categoryId)}>
+              {getCategoryName(categoryId)}
+            </button>
+          ))}
+        </div>
       </div>
+
       
+      <Footer />
     </div>
   );
 }
