@@ -9,8 +9,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //cookieParser
-const cookieParser = require('cookie-parser')
-app.use(cookieParser())
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 //mongoose 연결
 const mongoose = require("mongoose");
@@ -23,13 +23,13 @@ mongoose
 const searchRoutes = require("./routes/searchRoutes");
 app.use("/api/search", searchRoutes);
 
-const userRoutes = require('./routes/userRoutes')
-app.use('/api/users', userRoutes)
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/users", userRoutes);
 
 //서버 실행
 app.listen(port, () => {
-  console.log(`app listening on port ${port}`)
-})
+    console.log(`app listening on port ${port}`);
+});
 
 const { User } = require("./models/User");
 const { UserCategory } = require("./models/UserCategory");
@@ -37,11 +37,8 @@ const { Bookmark } = require("./models/Bookmark");
 const { Category } = require("./models/Category");
 const { Review } = require("./models/Review");
 
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
-
 const { auth } = require("./middleware/auth");
-const { Comment } = require("./Comment.js"); // 이거 왜 ./models/Comment라고 하면 빨간줄 뜨지
+// const { Comment } = require("./Category"); // 이거 왜 ./models/Comment라고 하면 빨간줄 뜨지
 const { Reply } = require("./models/Reply");
 
 //===============================================================================
@@ -56,16 +53,16 @@ app.get("/api/axios", (req, res) => {
 
 app.get("/api/users", (req, res) => {
     User.find({})
-        .then(users => {
+        .then((users) => {
             res.json(users);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).send(err);
         });
-})
+});
 
 app.post("/api/users/register", (req, res) => {
-    const user = new User(req.body)
+    const user = new User(req.body);
 
     user.save()
         .then(() => {
@@ -174,19 +171,19 @@ app.post("/api/users/reset_password", auth, (req, res) => {
                                     { _id: req.user._id },
                                     { password: hash }
                                 )
-                                .then(() => {
-                                    res.status(200).json({
-                                        hashSuccess: true,
-                                        message: "비밀번호 변경 성공",
+                                    .then(() => {
+                                        res.status(200).json({
+                                            hashSuccess: true,
+                                            message: "비밀번호 변경 성공",
+                                        });
+                                    })
+                                    .catch((err) => {
+                                        res.json({
+                                            hashSuccess: false,
+                                            message: "비밀번호 변경 실패",
+                                            error: err,
+                                        });
                                     });
-                                })
-                                .catch((err) => {
-                                    res.json({
-                                        hashSuccess: false,
-                                        message: "비밀번호 변경 실패",
-                                        error: err,
-                                    });
-                                });
                             });
                         } else {
                             return res.json({
@@ -203,7 +200,8 @@ app.post("/api/users/reset_password", auth, (req, res) => {
                 } else {
                     return res.json({
                         ifSuccess: false,
-                        message:"새 비밀번호가 현재 비밀번호와 같으면 안됩니다",
+                        message:
+                            "새 비밀번호가 현재 비밀번호와 같으면 안됩니다",
                     });
                 }
             });
@@ -250,23 +248,23 @@ app.post("/api/users/reset_nickname", auth, (req, res) => {
 
 app.get("/api/users/categories", (req, res) => {
     Category.find({})
-        .then(categories => {
+        .then((categories) => {
             res.json(categories);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).send(err);
         });
-})
+});
 
 app.get("/api/users/user_categories", (req, res) => {
     UserCategory.find({})
-        .then(user_categories => {
+        .then((user_categories) => {
             res.json(user_categories);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).send(err);
         });
-})
+});
 
 app.post("/api/users/select_category", auth, (req, res) => {
     const { userId, categoryId } = req.body;
@@ -314,23 +312,23 @@ app.post("/api/users/deselect_category", auth, (req, res) => {
 
 app.get("/api/users/review", (req, res) => {
     Review.find({})
-        .then(reviews => {
+        .then((reviews) => {
             res.json(reviews);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).send(err);
         });
-})
+});
 
 app.get("/api/users/bookmark", (req, res) => {
     Bookmark.find({})
-        .then(bookmarks => {
+        .then((bookmarks) => {
             res.json(bookmarks);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).send(err);
         });
-})
+});
 
 app.post("/api/users/select_bookmark", auth, (req, res) => {
     const { userId, reviewId } = req.body;
@@ -378,57 +376,66 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
 
 app.post("/api/comments", (req, res) => {
     const { author, content } = req.body;
-  
-    const newComment = new Comment({
-      author,
-      content,
-      timestamp: new Date().toISOString(),
-    });
-  
-    newComment
-      .save()
-      .then((comment) => {
-        res.json({ success: true, comment });
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).json({ success: false, message: "내부 서버 오류." });
-      });
-  });
 
-  router.post("/api.comments/:commentId/replies", (req, res) => {
-    const { commentId } = req.params;
-    const { author, content } = req.body;
-  
-    const newReply = new Reply({
-      commentId,
-      author,
-      content,
-      timestamp: new Date().toISOString(),
+    const newComment = new Comment({
+        author,
+        content,
+        timestamp: new Date().toISOString(),
     });
-  
-    newReply
-      .save()
-      .then((reply) => {
-        // 답글을 해당 댓글에 추가
-        Comment.findByIdAndUpdate(
-          commentId,
-          { $push: { replies: reply._id } },
-          { new: true }
-        )
-          .exec()
-          .then((comment) => {
+
+    newComment
+        .save()
+        .then((comment) => {
             res.json({ success: true, comment });
-          })
-          .catch((error) => {
+        })
+        .catch((error) => {
             console.error(error);
-            res.status(500).json({ success: false, message: "내부 서버 오류." });
-          });
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).json({ success: false, message: "내부 서버 오류." });
-      });
-  });
-  
-  module.exports = router;
+            res.status(500).json({
+                success: false,
+                message: "내부 서버 오류.",
+            });
+        });
+});
+
+// router.post("/api.comments/:commentId/replies", (req, res) => {
+//     const { commentId } = req.params;
+//     const { author, content } = req.body;
+
+//     const newReply = new Reply({
+//         commentId,
+//         author,
+//         content,
+//         timestamp: new Date().toISOString(),
+//     });
+
+//     newReply
+//         .save()
+//         .then((reply) => {
+//             // 답글을 해당 댓글에 추가
+//             Comment.findByIdAndUpdate(
+//                 commentId,
+//                 { $push: { replies: reply._id } },
+//                 { new: true }
+//             )
+//                 .exec()
+//                 .then((comment) => {
+//                     res.json({ success: true, comment });
+//                 })
+//                 .catch((error) => {
+//                     console.error(error);
+//                     res.status(500).json({
+//                         success: false,
+//                         message: "내부 서버 오류.",
+//                     });
+//                 });
+//         })
+//         .catch((error) => {
+//             console.error(error);
+//             res.status(500).json({
+//                 success: false,
+//                 message: "내부 서버 오류.",
+//             });
+//         });
+// });
+//
+// module.exports = router;
