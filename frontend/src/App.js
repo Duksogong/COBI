@@ -1,7 +1,7 @@
-import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import TestSearch from './components/views/TestPage/TestSearch';
+import TestSearch from "./components/views/TestPage/TestSearch";
 import TestSearchReviews from "./components/views/TestPage/TestSearchReviews";
 import TestMyReview from './components/views/TestPage/TestMyReview';
 
@@ -38,7 +38,9 @@ function App() {
         <Route path="/change_category" element={<ChangeCategoryPage />} />
 
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
-
+          
+        <Route path="/review" element={<ReviewPage />} />
+          
         <Route path="/review_detail/:reviewId/:currentUser" element={<ReviewDetailPage />} />
       </Routes>
     </BrowserRouter>
