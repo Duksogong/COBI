@@ -116,51 +116,72 @@ router.get("/:reviewId", async (req, res) => {
 });
 
 // 리뷰 수정
-router.patch("/:reviewId", upload.array("images", 3), async (req, res) => {
-    try {
-        const { reviewId } = req.params;
+router.patch(
+    "/:reviewId",
+    auth,
+    upload.array("images", 3),
+    async (req, res) => {
+        try {
+            const { reviewId } = req.params;
 
-        // 업데이트할 리뷰 데이터 수집
-        const updatedReviewData = { ...req.body };
+            // 업데이트할 리뷰 데이터 수집
+            const updatedReviewData = { ...req.body };
 
-        // 새 이미지가 제공되면 이미지 업데이트
-        if (req.files && req.files.length > 0) {
-            const imageIds = [];
-
-            for (const file of req.files) {
-                const image = new Image({
-                    image: {
-                        data: file.buffer,
-                        contentType: file.mimetype,
-                    },
+            const reviewToUpdate = await Review.findById(reviewId);
+            // 리뷰가 존재하지 않으면 에러 응답
+            if (!reviewToUpdate) {
+                return res.status(404).json({
+                    success: false,
+                    error: "Review not found",
                 });
-
-                const savedImage = await image.save();
-                imageIds.push(savedImage._id);
+            }
+            // 작성자 확인
+            if (reviewToUpdate.user.toString() !== req.user._id.toString()) {
+                return res.status(403).json({
+                    success: false,
+                    error: "Unauthorized. You are not the author of this review.",
+                });
             }
 
-            // 리뷰 문서의 이미지 필드 업데이트
-            updatedReviewData.images = imageIds;
+            // 새 이미지가 제공되면 이미지 업데이트
+            if (req.files && req.files.length > 0) {
+                const imageIds = [];
+
+                for (const file of req.files) {
+                    const image = new Image({
+                        image: {
+                            data: file.buffer,
+                            contentType: file.mimetype,
+                        },
+                    });
+
+                    const savedImage = await image.save();
+                    imageIds.push(savedImage._id);
+                }
+
+                // 리뷰 문서의 이미지 필드 업데이트
+                updatedReviewData.images = imageIds;
+            }
+
+            // 리뷰 업데이트
+            const updatedReview = await Review.findByIdAndUpdate(
+                { _id: reviewId, user: req.user._id }, // 작성자가 로그인 한 유저일 때
+                { $set: updatedReviewData },
+                { new: true } // 업데이트된 문서 반환
+            );
+
+            return res.status(200).json({
+                success: true,
+                review: updatedReview,
+            });
+        } catch (err) {
+            return res.json({
+                success: false,
+                error: err.message,
+            });
         }
-
-        // 리뷰 업데이트
-        const updatedReview = await Review.findByIdAndUpdate(
-            reviewId,
-            { $set: updatedReviewData },
-            { new: true } // 업데이트된 문서 반환
-        );
-
-        return res.status(200).json({
-            success: true,
-            review: updatedReview,
-        });
-    } catch (err) {
-        return res.json({
-            success: false,
-            error: err.message,
-        });
     }
-});
+);
 
 // 리뷰 삭제
 router.delete("/:reviewId", async (req, res) => {
