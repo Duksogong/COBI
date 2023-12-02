@@ -43,7 +43,7 @@ app.get("/api/axios", (req, res) => {
 
 app.post("/api/users/register", (req, res) => {
     const { email, password, confirmPassword } = req.body;
-
+    const user = new User(req.body);
     user.save()
         .then(() => {
             // 사용자 등록 성공
@@ -85,6 +85,7 @@ app.post("/api/users/login", (req, res) => {
                     res.cookie("x_auth", user.token)
                         .status(200)
                         .json({ loginSuccess: true, _id: user._id });
+                    console.log(user.token);
                 });
             });
         })

@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+const cookieParser = require("cookie-parser");
+router.use(cookieParser());
+
+const { auth } = require("../middleware/auth");
 const { Review } = require("../models/Review");
 const { Image } = require("../models/Image");
 
@@ -9,22 +13,18 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.post("/", upload.array("images", 3), async (req, res) => {
-    // const user = req.user;
-    const { user, category } = req.body; // 임시
+router.post("/", auth, upload.array("images", 3), async (req, res) => {
+    const userId = req.user._id;
+    const { category } = req.body; // 임시
+
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
 
     try {
-        // const imageIds = await Promise.all(
-        //     req.files.map(async (file) => {
-        //         const image = new Image({
-        //             data: file.buffer,
-        //             contentType: file.mimetype,
-        //         });
-        //         const savedImage = await image.save();
-        //         return savedImage;
-        //     })
-        // );
-
         // 이미지 ID를 저장할 배열 생성
         const imageIds = [];
 
@@ -46,8 +46,7 @@ router.post("/", upload.array("images", 3), async (req, res) => {
 
         const review = new Review({
             ...req.body,
-            // user: user._id,
-            user,
+            user: userId,
             category,
             images: imageIds,
         });
