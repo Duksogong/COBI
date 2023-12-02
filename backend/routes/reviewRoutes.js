@@ -91,12 +91,10 @@ router.get("/user", auth, async (req, res) => {
 });
 
 // 특정 리뷰 조회
-router.get("/:reviewId", async (req, res) => {
+router.get("/:reviewId", auth, async (req, res) => {
     const { reviewId } = req.params;
     try {
-        const review = await Review.findById(reviewId).populate(
-            "user category images"
-        );
+        const review = await Review.findById(reviewId);
         if (!review) {
             return res.status(404).json({
                 success: false,
