@@ -344,26 +344,28 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
 });
 
 app.post("/api/comments", (req, res) => {
-  const { username, content } = req.body;
-
-  // 댓글 객체 생성
-  const newComment = new Comment({
-    author: username,
-    content,
-    timestamp: new Date().toISOString(),
-  });
-
-  // 댓글을 MongoDB에 저장
-  newComment
-    .save()
-    .then((comment) => {
-      res.json({ success: true, comment, message: "댓글이 성공적으로 등록되었습니다." });
-    })
-    .catch((error) => {
-      console.error("댓글 저장 중 오류 발생:", error);
-      res.status(500).json({ success: false, message: "내부 서버 오류." });
+    const { username, content } = req.body;
+  
+    // 댓글 객체 생성
+    const newComment = new Comment({
+      author: username,  // 여기서 username을 author로 수정
+      content,
+      timestamp: new Date().toISOString(),
     });
-});
+  
+    // 댓글을 MongoDB에 저장
+    newComment
+      .save()
+      .then((comment) => {
+        res.json({ success: true, comment, message: "댓글이 성공적으로 등록되었습니다." });
+      })
+      .catch((error) => {
+        console.error("댓글 저장 중 오류 발생:", error);
+        res.status(500).json({ success: false, message: "내부 서버 오류." });
+      });
+  });
+  
+  
 
 router.post("/api/comments/:commentId/replies", (req, res) => {
   const { commentId } = req.params;
