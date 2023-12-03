@@ -5,16 +5,13 @@ const config = require("./config/key");
 const cors = require("cors");
 const router = express.Router();
 
-// bodyParser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// mongoose 연결
 const mongoose = require("mongoose");
 
-// 몽고디비 연결 - config 파일에서 가져온 것 사용
 mongoose
   .connect(config.mongoURI, {
     useNewUrlParser: true,
@@ -23,7 +20,6 @@ mongoose
   .then(() => console.log("MongoDB 연결됨..."))
   .catch((err) => console.log(err));
 
-// router 마운트
 const searchRoutes = require("./routes/searchRoutes");
 app.use("/api/search", searchRoutes);
 
@@ -39,11 +35,9 @@ app.use(cookieParser());
 
 const { auth } = require("./middleware/auth");
 const { Comment } = require("./models/Comment");
-const { Reply } = require("./models/Reply");
+const Reply = require("./models/Reply");
 
 app.use(router);
-
-//===============================================================================
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -58,14 +52,12 @@ app.post("/api/users/register", (req, res) => {
   const user = new User({ email, password, confirmPassword });
   user.save()
     .then(() => {
-      // 사용자 등록 성공
       res.status(200).json({
         success: true,
         message: "사용자 등록 성공",
       });
     })
     .catch((err) => {
-      // 오류 처리
       res.status(500).json({
         success: false,
         message: err.message,
@@ -209,22 +201,19 @@ app.post("/api/users/reset_password", auth, (req, res) => {
 app.post("/api/users/reset_nickname", auth, (req, res) => {
   const newNickname = req.body.nickname;
 
-  // 닉네임이 이미 존재하는지 확인
   User.findOne({ nickname: newNickname })
     .then((existingUser) => {
       if (existingUser) {
-        // 이미 존재하는 경우 오류 반환
         return res.json({
           success: false,
           message: "이미 있는 nickname입니다.",
         });
       }
 
-      // 닉네임이 존재하지 않는 경우, 현재 사용자의 닉네임을 업데이트
       User.findOneAndUpdate(
         { _id: req.user._id },
         { nickname: newNickname },
-        { new: true } // 업데이트된 문서를 반환하도록 설정
+        { new: true }
       )
         .then((updatedUser) => {
           if (!updatedUser) {
@@ -345,63 +334,57 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
 
 app.post("/api/comments", (req, res) => {
     const { username, content } = req.body;
-  
-    // 댓글 객체 생성
+
     const newComment = new Comment({
-      author: username,  // 여기서 username을 author로 수정
-      content,
-      timestamp: new Date().toISOString(),
+        author: username,
+        content,
+        timestamp: new Date().toISOString(),
     });
-  
-    // 댓글을 MongoDB에 저장
+
     newComment
-      .save()
-      .then((comment) => {
-        res.json({ success: true, comment, message: "댓글이 성공적으로 등록되었습니다." });
-      })
-      .catch((error) => {
-        console.error("댓글 저장 중 오류 발생:", error);
-        res.status(500).json({ success: false, message: "내부 서버 오류." });
-      });
-  });
-  
-  
-
-router.post("/api/comments/:commentId/replies", (req, res) => {
-  const { commentId } = req.params;
-  const { author, content } = req.body;
-
-  const newReply = new Reply({
-    commentId,
-    author,
-    content,
-    timestamp: new Date().toISOString(),
-  });
-
-  newReply
-    .save()
-    .then((reply) => {
-      // 답글을 해당 댓글에 추가
-      Comment.findByIdAndUpdate(
-        commentId,
-        { $push: { replies: reply._id } },
-        { new: true }
-      )
-        .exec()
+        .save()
         .then((comment) => {
-          res.json({ success: true, comment });
+            res.json({ success: true, comment, message: "댓글이 성공적으로 등록되었습니다." });
         })
         .catch((error) => {
-          console.error(error);
-          res.status(500).json({ success: false, message: "내부 서버 오류." });
+            console.error("댓글 저장 중 오류 발생:", error);
+            res.status(500).json({ success: false, message: "내부 서버 오류." });
         });
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ success: false, message: "내부 서버 오류." });
-    });
 });
 
-//===============================================================================
+router.post("/api/comments/:commentId/replies", async (req, res) => {
+    try {
+        const { commentId } = req.params;
+        const { author, content } = req.body;
+
+        const newComment = new Comment({
+            author,
+            content,
+            timestamp: new Date().toISOString(),
+        });
+
+        const savedComment = await newComment.save();
+
+        const newReply = new Reply({
+            commentId: savedComment._id,
+            author,
+            content,
+            timestamp: new Date().toISOString(),
+        });
+
+        const savedReply = await newReply.save();
+
+        const updatedComment = await Comment.findByIdAndUpdate(
+            commentId,
+            { $push: { replies: savedReply._id } },
+            { new: true }
+        ).exec();
+
+        res.json({ success: true, comment: updatedComment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "내부 서버 오류." });
+    }
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
