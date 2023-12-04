@@ -13,7 +13,9 @@ import search from "./search_reducer";
 const rootReducer = combineReducers({
     user,
     nickname,
+
     search,
+
     password,
     category,
     bookmark,

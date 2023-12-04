@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+ 
+import NavBar from '../NavBar/NavBar';
+import Footer from '../Footer/Footer';
+import Card from 'react-bootstrap/Card';
 
 function MyBookmarkPage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
   const [cookie, setCookie] = useState("");
   const [users, setUsers] = useState([]);
@@ -103,33 +107,55 @@ function MyBookmarkPage() {
     // ==========================================================
 
   return (
-    <div style={{ width: '100%', height: '100vh'}}>
+    <div className="d-flex flex-column" style={{height: '100vh'}}>
+      <NavBar />
       
-      <h4>내 책갈피</h4>
-      <hr/>
+      <div className="d-flex flex-column align-items-center flex-grow-1"
+         style={{justifyContent: 'space-evenly'}}
+      >
+        <div style={{width: '310px'}}>정렬방식</div>
 
-      <div>
-        {details.map((reviewO, index) => (
-          <div key={index} type="submit" style={{ backgroundColor: 'mistyrose', margin:'2px', cursor: 'pointer',}} 
-          onClick={() => handleReviewClick(reviewO._id, currentUser._id)}
+        <div style={{ height: '40rem', overflow: 'auto'}}>
+          {details.map((reviewO, index) => ( 
+  
+          <Card 
+            bg="light"  
+            style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.3)', margin:'10px', marginBottom:'20px', border:'none',
+            }}
           >
-            <div>
-              <div style={{ fontSize:'10px'}}>책 제목 : {reviewO?.bookname}</div>
-              <div style={{ fontSize:'10px'}}>글 제목 : {reviewO?.title}</div>
+            <div key={index} type="submit" style={{padding: '10px'}}
+              onClick={() => handleReviewClick(reviewO._id, currentUser._id)}
+            >
+              <div style={{display: "flex", flexDirection:"row"}}> 
+                <div>
+                  <img style={{width:"50px", height:"70px", marginRight:'10px',
+                    borderRadius: "10%", objectFit: "cover",}}
+                    src="http://dummyimage.com/50x70/ced4da/6c757d.jpg"
+                    alt="Image Alt Text"/>
+                </div>
+                <div style={{width: '260px', fontSize:'16px', 
+                  display:'flex', flexDirection: 'column', justifyContent:'space-around'}}>
+                  <div>책 제목 : {reviewO?.booktitle}</div>
+                  <div>글 제목 : {reviewO?.title}</div>
+                </div>
+              </div>
+              <div>
+                <small style={{ fontSize: '12px' }}>
+                  작성자 닉네임: {
+                    users.find(user => user._id === reviewO.user)
+                    ? users.find(user => user._id === reviewO.user).nickname
+                    : 'unkown'
+                  }
+                </small>
+              </div>
             </div>
-            <div>
-              <small style={{ fontSize: '10px' }}>
-                작성자 닉네임: {
-                  users.find(user => user._id === reviewO.user)
-                  ? users.find(user => user._id === reviewO.user).nickname
-                  : 'unkown'
-                }
-              </small>
-            </div>
-          </div>
-        ))}
+          </Card>
+
+          ))}
+        </div>
       </div>
-      
+
+      <Footer />  
     </div>
   );
 }

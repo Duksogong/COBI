@@ -1,0 +1,14 @@
+.carousel-control-prev, .carousel-control-next {
+    position: absolute;
+    width: auto;
+    padding: 15px;
+    border-radius: 0;
+}
+  
+.carousel-control-prev {
+    left: -3.5em;
+}
+
+.carousel-control-next {
+    right: -3.5em;
+}
