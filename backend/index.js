@@ -1,5 +1,3 @@
-// app.js
-
 const express = require("express");
 const app = express();
 const port = 5000;
@@ -21,12 +19,12 @@ app.use(cookieParser());
 const mongoose = require("mongoose");
 
 mongoose
-  .connect(config.mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB 연결됨..."))
-  .catch((err) => console.log(err));
+    .connect(config.mongoURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("MongoDB 연결됨..."))
+    .catch((err) => console.log(err));
 
 const searchRoutes = require("./routes/searchRoutes");
 app.use("/api/search", searchRoutes);
@@ -39,9 +37,6 @@ app.use("/api/review", reviewRoutes);
 
 const commentRoutes = require("./routes/commentRoutes"); 
 app.use("/api/comments", commentRoutes); 
-
-const reviewRoutes = require("./routes/reviewRoutes");
-app.use("/api/review", reviewRoutes);
 
 //서버 실행
 app.listen(port, () => {
@@ -63,11 +58,11 @@ const { Review } = require("./models/Review");
 app.use(router);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+    res.send("Hello World!");
 });
 
 app.get("/api/axios", (req, res) => {
-  res.send("AXIOS testing success");
+    res.send("AXIOS testing success");
 });
 
 app.get("/api/users", (req, res) => {
@@ -128,28 +123,18 @@ app.post("/api/users/login", (req, res) => {
         })
         .catch((err) => {
             return res.status(400).send(err);
-          }
-          res.cookie("x_auth", user.token)
-            .status(200)
-            .json({ loginSuccess: true, _id: user._id });
-        });
-      });
-    })
-    .catch((err) => {
-      return res.status(400).send(err);
-    });
-});
+        })
 
 app.get("/api/users/auth", auth, (req, res) => {
-  res.status(200).json({
-    _id: req.user._id,
-    email: req.user.email,
-    nickname: req.user.nickname,
-    password: req.user.password,
-    profile_image: req.user.profile_image,
-    isAdmin: req.user.role === 0 ? false : true,
-    isAuth: true,
-  });
+    res.status(200).json({
+        _id: req.user._id,
+        email: req.user.email,
+        nickname: req.user.nickname,
+        password: req.user.password,
+        profile_image: req.user.profile_image,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+    });
 });
 
 app.get("/api/users/logout", auth, (req, res) => {
@@ -483,5 +468,3 @@ app.post("/api/comments", (req, res) => {
 // });
 //
 // module.exports = router;
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
