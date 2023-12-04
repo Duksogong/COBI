@@ -9,7 +9,7 @@ const { auth } = require('../middleware/auth')
 const { Review } = require('../models/Review')
 
 //사용자 감상평 불러오기
-router.get('/review', auth, (req, res) => {
+router.get('/myReview', auth, (req, res) => {
   //최신순으로 정렬하여 전달
   Review.find({ user: req.user._id }).sort({created_at: -1})
     .then((reviews) => {

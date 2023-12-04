@@ -29,6 +29,9 @@ app.use("/api/users", userRoutes);
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/api/review", reviewRoutes);
 
+const reviewRoutes = require("./routes/reviewRoutes");
+app.use("/api/review", reviewRoutes);
+
 //서버 실행
 app.listen(port, () => {
     console.log(`app listening on port ${port}`);
@@ -40,12 +43,8 @@ const { Bookmark } = require("./models/Bookmark");
 const { Category } = require("./models/Category");
 const { Review } = require("./models/Review");
 
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
-
-
 const { auth } = require("./middleware/auth");
-// const { Comment } = require("./Category"); // 이거 왜 ./models/Comment라고 하면 빨간줄 뜨지
+const { Comment } = require("./models/Comment");
 const { Reply } = require("./models/Reply");
 
 //===============================================================================
