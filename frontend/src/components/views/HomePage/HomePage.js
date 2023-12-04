@@ -1,8 +1,10 @@
+import './HomePage.css'
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-import NavBar from '../NavBar/NavBar'; // 상대 경로에 주의하여 수정
+import NavBar from '../NavBar/NavBar';
 import Footer from '../Footer/Footer';
 import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
@@ -17,7 +19,7 @@ function HomePage() {
   
   useEffect(() => {
     // 현재 브라우저 쿠키에서 값(토큰) 가져오기
-    const cookies = document.cookie.split('=');
+    const cookies = document.cookie.split('='); 
     setCookie(cookies[1]);
   }, []);
   
@@ -51,57 +53,62 @@ function HomePage() {
   };
   
   return (
-    <div>
+    <div className="d-flex flex-column" style={{height: '100vh'}}>
       <NavBar />
 
-      <div className="d-flex flex-column align-items-center">
+      <div className="d-flex flex-column align-items-center flex-grow-1"
+        style={{justifyContent: 'space-evenly'}}
+      >
 
-        <Card style={{width: "32rem", margin: "1rem"}}>
-          <Card.Body className="text-center">This is some text within a card body.</Card.Body>
+        <Card>
+          <Card.Body className="text-center" style={{width: '310px'}}>
+            This is some text within a card body.
+          </Card.Body>
         </Card>
       
-        <Carousel pause="hover" controls={false} data-bs-theme="dark">
+        <Carousel pause="hover" indicators={false} data-bs-theme="dark"
+          style={{height: '37rem', width: '310px'}}>
           {reviews.map((review) => (
 
-            <Carousel.Item key={review._id} 
-            style={{marginBottom: '1rem', minHeight: '32rem', minWidth: '34rem'}}>
+            <Carousel.Item key={review._id}>
               <div onClick={() => handleCarouselItemClick(review._id, currentUser._id)}>
-                <Card bg="light" style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                  minHeight: '30rem', width: '32rem'}}>
-                  <Card style={{padding:"10px", display: "flex", flexDirection:"row"}} bg='light'>
+                <Card bg="light" 
+                style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)', margin:'10px', marginBottom:'132px'}}>
+                  <div bg='light' 
+                  style={{padding:"10px", display: "flex", flexDirection:"row"}}>
                     <Card.Img style={{width:"50px", height:"50px", 
                     borderRadius: "50%", objectFit: "cover",}}
                     src="http://dummyimage.com/50x50/ced4da/6c757d.jpg"
                     alt="Image Alt Text">
                     </Card.Img>
                     <Card.Body style={{padding: '0px', marginLeft: '10px', 
-                    display: 'flex', flexDirection: 'row'}}>
-                      <div className="align-items-center">
+                      display: 'flex', flexDirection: 'row'}}>
+                      <div style={{display:'flex', justifyContent:'space-around'}}>
                         {users.find(user => user._id === review.user)
                         ? users.find(user => user._id === review.user).nickname
                         : 'unkown'} 
                         <br/> {review.createdAt}
                       </div>
                     </Card.Body>
-                  </Card>
+                  </div>
                   <div style={{padding:"10px"}}>
                     <Card.Img style={{width:"144px", height:"96px"}}
                       src="http://dummyimage.com/128x96/ced4da/6c757d.jpg"
                       alt="Image Alt Text"
                     />
                   </div>
-                  <div style={{padding:"10px", width:'32rem'}}>
+                  <div style={{padding:"10px", height:'320px'}}>
                     <h5>{review?.title ? review?.title : 'untitled'}</h5>
                     <Card.Text>
                       {review.review.length > 120 ? `${review.review.slice(0, 120)}...` : review.review}
                     </Card.Text>
                   </div>
                 </Card>
-                <Carousel.Caption>
-                  <h5>{review?.bookname}</h5>
-                  <p>{review.author}</p>
-                </Carousel.Caption>
               </div>
+              <Carousel.Caption>
+                <h5>{review?.booktitle}</h5>
+                <p>{review.author}</p>
+              </Carousel.Caption>
             </Carousel.Item>
 
           ))}
