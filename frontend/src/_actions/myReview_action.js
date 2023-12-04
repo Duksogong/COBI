@@ -4,7 +4,7 @@ import {
 } from './types'
 
 export function myReview() {
-  const request = axios.get('/api/users/review')
+  const request = axios.get('/api/users/myReview')
     .then(response => response.data)
 
   return {

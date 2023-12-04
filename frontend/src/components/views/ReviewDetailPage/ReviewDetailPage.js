@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { selectBookmark } from "../../../_actions/bookmark_action";
 import { deselectBookmark } from "../../../_actions/bookmark_action";
+import NavBar from '../NavBar/NavBar';
+import Footer from '../Footer/Footer';
+import Card from 'react-bootstrap/Card';
+import { FaRegCommentDots } from "react-icons/fa6";
+import { HiMiniBookmark } from "react-icons/hi2";import { HiOutlineBookmark } from "react-icons/hi2";
 
 function ReviewDetailPage() {
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const [users, setUsers] = useState([]);
@@ -88,41 +93,55 @@ function ReviewDetailPage() {
     }
   
     return (
-      <div style={{ 
-        display: 'flex', justifyContent: 'center', flexDirection: 'column',
-        alignItems: 'center', width: '100%', height: '100vh'
-      }}>
+      <div className="d-flex flex-column" style={{height: '100vh'}}>
+        <NavBar />
       
-        <div style={{backgroundColor: 'mistyrose', position: 'relative',
-        minWidth: '300px', minHeight: '500px'
-        }}>
-            <button style={{border: '2px solid', 
-            position: 'absolute', top: '-15px', right: '30px', 
-            backgroundColor: selectedBookmarks.find((bookmark) => bookmark.reviewId === reviewId)
-              ? 'green': 'white',
-            }} onClick={() => onSetBookmark()}>
-              책갈피
-            </button>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{width: '50px', height: '50px', overflow: 'hidden', marginRight: '10px',
-                borderRadius: '50%', backgroundColor: 'gray', margin: '5px'
-                }}>프사</div>
-                <div>{
+        <div className="d-flex flex-column align-items-center flex-grow-1"
+          style={{justifyContent: 'space-evenly'}}
+        >
+          <Card 
+            bg="light"  
+            style={{ position: 'relative',width:'310px',height: '40rem',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.3)', margin:'10px', marginBottom:'20px', border:'none',
+            }}
+          >
+
+            <HiMiniBookmark   style={{position: 'absolute', top: '-15px', right: '30px', fontSize:'40px',
+              backgroundColor: selectedBookmarks.find((bookmark) => bookmark.reviewId === reviewId)
+                ? 'green': 'white',
+            }} onClick={() => onSetBookmark()}/>
+
+            <div style={{ display: 'flex', alignItems: 'center', padding:'10px', borderBottom:'1px solid'}}>
+              <Card.Img style={{width:"50px", height:"50px", 
+                borderRadius: "50%", objectFit: "cover",}}
+                src="http://dummyimage.com/50x50/ced4da/6c757d.jpg"
+                alt="Image Alt Text">
+              </Card.Img>
+              <Card.Body style={{padding: '0px', marginLeft: '10px', 
+                display: 'flex', flexDirection: 'row'}}>
+                <div style={{display:'flex', justifyContent:'space-around'}}>{
                   users.find(user => user._id === detail?.user)
                   ? users.find(user => user._id === detail.user).nickname : 'unkown'
                 }</div>
-              </div>
-              <hr/>
-              <div>이미지</div>
+              </Card.Body>
+            </div>
+              
+            <div style={{padding:'10px', display: 'flex', justifyContent:'space-around', flexDirection:"column"}}>
+              <Card.Img style={{width:"144px", height:"96px"}}
+                src="http://dummyimage.com/128x96/ced4da/6c757d.jpg"
+                alt="Image Alt Text"
+              />
               <h4>{detail?.title}</h4>
-              <p style={{ fontSize: '10px'}}>{detail?.review}</p>
+              <p style={{ fontSize: '16px', height: '24rem', overflow: 'auto'}}>{detail?.review}</p>
             </div>
-            <div style={{ position: 'absolute', bottom: '10px', left: '10px', border: '1px solid black'}}>
-              <div>댓글</div>
-            </div>
+
+            <FaRegCommentDots 
+              style={{ position: 'absolute', bottom: '10px', left: '10px'}}
+            />
+            </Card>
         </div>
 
+        <Footer />
       </div>
     );
 }

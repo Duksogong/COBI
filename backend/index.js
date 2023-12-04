@@ -29,6 +29,9 @@ app.use("/api/users", userRoutes);
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/api/review", reviewRoutes);
 
+const commentRoutes = require("./routes/commentRoutes"); 
+app.use("/api/comments", commentRoutes); 
+
 //서버 실행
 app.listen(port, () => {
     console.log(`app listening on port ${port}`);
@@ -473,3 +476,5 @@ app.post("/api/comments", (req, res) => {
 // });
 //
 // module.exports = router;
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
