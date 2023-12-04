@@ -26,6 +26,9 @@ app.use("/api/search", searchRoutes);
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
 
+const reviewRoutes = require("./routes/reviewRoutes");
+app.use("/api/review", reviewRoutes);
+
 //서버 실행
 app.listen(port, () => {
     console.log(`app listening on port ${port}`);

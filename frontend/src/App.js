@@ -18,7 +18,7 @@ import ChangeCategoryPage from "./components/views/CategoryPage/CategoryPage";
 import MyBookmarkPage from "./components/views/MyBookmarkPage/MyBookmarkPage";
 
 import ReviewDetailPage from "./components/views/ReviewDetailPage/ReviewDetailPage";
-import ReviewPage from "./components/views/ReviewPage/ReviewPage";
+import PostReviewPage from "./components/views/PostReviewPage/PostReviewPage";
 
 function App() {
     return (
@@ -52,7 +52,7 @@ function App() {
 
                 <Route path="/my_bookmark" element={<MyBookmarkPage />} />
 
-                <Route path="/review" element={<ReviewPage />} />
+                <Route path="/post_review" element={<PostReviewPage />} />
 
                 <Route
                     path="/review_detail/:reviewId/:currentUser"
