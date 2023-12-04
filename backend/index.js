@@ -40,6 +40,7 @@ app.use("/api/users", categoryRoutes);
 
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 app.use("/api/users", bookmarkRoutes);
+
 const commentRoutes = require("./routes/commentRoutes"); 
 app.use("/api/comments", commentRoutes); 
 
@@ -49,17 +50,12 @@ app.listen(port, () => {
 });
 
 const { User } = require("./models/User");
-
 const { auth } = require("./middleware/auth");
+
 const { Comment } = require("./models/Comment");
 const { Reply } = require("./models/Reply");
 
-const Reply = require("./models/Reply");
-
 const { Category } = require("./models/Category");
-const { Review } = require("./models/Review");
-
-
 
 app.use(router);
 

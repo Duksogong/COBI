@@ -3,6 +3,9 @@ import './HomePage.css'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { kadvice } from 'kadvice';
+
+import { IoMdRefresh } from "react-icons/io";
 
 import NavBar from '../NavBar/NavBar';
 import Footer from '../Footer/Footer';
@@ -16,11 +19,16 @@ function HomePage() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
   const [reviews, setReviews] = useState([]);
+
+  const [advice, setAdvice] = useState("")
   
   useEffect(() => {
     // 현재 브라우저 쿠키에서 값(토큰) 가져오기
     const cookies = document.cookie.split('='); 
     setCookie(cookies[1]);
+
+    //렌더 시, 랜덤 명언 출력
+    setAdvice(kadvice.getOne());
   }, []);
   
   useEffect(() => {
@@ -46,6 +54,17 @@ function HomePage() {
     .then(response => setReviews(response.data))
     .catch(error => console.error(error));
   }, []);
+
+  //명언 새로고침 이벤트
+  const onRefreshHandler = (event) => {
+    setAdvice(kadvice.getOne())
+  }
+
+  //명언 상세보기 이벤트
+  const onDetailAdviceHandler = (event) => {
+    //add...
+    alert(`${advice.message}\n- ${advice.author}`)
+  }
   
   const handleCarouselItemClick = (reviewId, userId) => {
     // 클릭 이벤트 처리
@@ -61,8 +80,17 @@ function HomePage() {
       >
 
         <Card>
-          <Card.Body className="text-center" style={{width: '310px'}}>
-            This is some text within a card body.
+          <Card.Body className="text-center" style={{width: '310px', height: '100px'}}>
+            <div onClick={onDetailAdviceHandler}>
+              <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', WebkitLineClamp: 2, fontSize: '12px',}}>
+              {advice.message}
+            </p>
+            <p style={{margin: '0px', fontSize: '12px', textAlign: 'right'}}>
+              「{advice.author}」
+            </p>
+            </div>
+            
+            <span onClick={onRefreshHandler} style={{padding: '16px', position: 'absolute', bottom: '0', left: '0'}}><IoMdRefresh /></span>
           </Card.Body>
         </Card>
       
@@ -105,10 +133,10 @@ function HomePage() {
                   </div>
                 </Card>
               </div>
-              <Carousel.Caption>
+              {/* <Carousel.Caption>
                 <h5>{review?.booktitle}</h5>
                 <p>{review.author}</p>
-              </Carousel.Caption>
+              </Carousel.Caption> */}
             </Carousel.Item>
 
           ))}
