@@ -19,9 +19,6 @@ function LoginPage() {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    //console.log('Email', Email)
-    //console.log('Password', Password)
-
     let body = {
       email: Email,
       password: Password
@@ -29,16 +26,13 @@ function LoginPage() {
 
     dispatch(loginUser(body))
     .then( response => {
-      if(response.payload.loginSuccess) {
-        navigate('/');
+      if(response.payload.success) {
+        navigate('/home');
       } else {
-        alert('Error');
+        alert('로그인 실패');
       }
     });
-
   }
-
-
 
   return (
     <div style={{ 

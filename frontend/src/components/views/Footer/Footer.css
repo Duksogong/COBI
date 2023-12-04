@@ -1,0 +1,24 @@
+/* .wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45px;
+} */
+
+nav {
+    overflow: hidden;
+    border-top: 2px solid grey;
+}
+
+nav > div {
+    /* 수평정렬, 5개의 button을 각각 20% width만큼 할당 */
+    float: left;
+    width: 20%;
+    text-align: center;
+  
+    /* 세로길이 설정 */
+    /* height: 45px;
+    line-height: 45px; */
+}
+  

@@ -12,8 +12,7 @@ const userSchema = mongoose.Schema({
     nickname: {
         type: String, 
         trim: true,
-        maxlength: 50,
-        unique: 1
+        maxlength: 50
     }, 
     password: {
         type: String,
@@ -98,13 +97,13 @@ userSchema.statics.findByToken = function(token) {
             }
             user
             .findOne({"_id" : decoded, "token" : token})
-            .then(user => {
-                if (!user) {reject('User not found')}
-                resolve(user)
-            })    
-            .catch(err => {
-                reject(err)
-            })
+                .then(user => {
+                    if (!user) {reject('User not found')}
+                    resolve(user)
+                })    
+                .catch(err => {
+                    reject(err)
+                })
         })
     })
 }
