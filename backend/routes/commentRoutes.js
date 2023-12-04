@@ -23,39 +23,39 @@ router.post("/api/comments", (req, res) => {
         });
 });
 
-router.post("/api/comments/:commentId/replies", async (req, res) => {
-    try {
-        const { commentId } = req.params;
-        const { author, content } = req.body;
+// router.post("/api/comments/:commentId/replies", async (req, res) => {
+//     try {
+//         const { commentId } = req.params;
+//         const { author, content } = req.body;
 
-        const newComment = new Comment({
-            author,
-            content,
-            timestamp: new Date().toISOString(),
-        });
+//         const newComment = new Comment({
+//             author,
+//             content,
+//             timestamp: new Date().toISOString(),
+//         });
 
-        const savedComment = await newComment.save();
+//         const savedComment = await newComment.save();
 
-        const newReply = new Reply({
-            commentId: savedComment._id,
-            author,
-            content,
-            timestamp: new Date().toISOString(),
-        });
+//         const newReply = new Reply({
+//             commentId: savedComment._id,
+//             author,
+//             content,
+//             timestamp: new Date().toISOString(),
+//         });
 
-        const savedReply = await newReply.save();
+//         const savedReply = await newReply.save();
 
-        const updatedComment = await Comment.findByIdAndUpdate(
-            commentId,
-            { $push: { replies: savedReply._id } },
-            { new: true }
-        ).exec();
+//         const updatedComment = await Comment.findByIdAndUpdate(
+//             commentId,
+//             { $push: { replies: savedReply._id } },
+//             { new: true }
+//         ).exec();
 
-        res.json({ success: true, comment: updatedComment });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "내부 서버 오류." });
-    }
-});
+//         res.json({ success: true, comment: updatedComment });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "내부 서버 오류." });
+//     }
+// });
 
 module.exports = router;
