@@ -6,6 +6,10 @@ const ReviewSchema = mongoose.Schema(
             type: String,
             maxLength: 50,
         },
+        booktitle: {
+            type: String,
+            maxLength: 50,
+        },
         isbn: {
             type: String,
             maxLength: 50,
@@ -21,9 +25,20 @@ const ReviewSchema = mongoose.Schema(
         review: {
             type: String,
         },
-        images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }],
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+        images: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Image",
+            },
+        ],
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+        },
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
