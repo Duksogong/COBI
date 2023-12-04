@@ -197,14 +197,16 @@ function CategoryPage() {
 
         <div onClick={() => { navigate(`/change_nickname`); }}
           style={{marginBottom:'20px', width: 'fit-content', 
-          display:'flex', flexDirection:'column', justifyContent:'space-around'}}
+          display:'flex', flexDirection:'column', justifyContent:'space-around',
+          fontFamily:'Arial, sans-serif', fontWeight:'bold'}}
         >
           닉네임 변경
         </div>
 
         <div onClick={() => { navigate(`/change_password`); }}
           style={{marginBottom:'20px', width: 'fit-content', 
-          display:'flex', flexDirection:'column', justifyContent:'space-around'}}
+          display:'flex', flexDirection:'column', justifyContent:'space-around',
+          fontFamily:'Arial, sans-serif', fontWeight:'bold'}}
         >
           비밀번호 변경
         </div>
@@ -212,7 +214,7 @@ function CategoryPage() {
         <form onSubmit={onAddCategory}
           style={{display:'flex', flexDirection:'column', justifyContent:'space-evenly'}}
         >
-          <div>관심 카테고리 설정</div>
+          <div style={{fontFamily:'Arial, sans-serif', fontWeight:'bold'}}>관심 카테고리 설정</div>
           <div style={{padding:'15px', display:'flex'}}>
             <Form.Select value={selectedCategory} onChange={onCategoryChange} size="sm"
               style={{ borderColor: '#A9B388', borderWidth: '2px', color: 'grey'}}>
@@ -247,7 +249,8 @@ function CategoryPage() {
         <hr/> 
 
         <div onClick={onClickHandler}
-          style={{marginBottom:'20px', width: 'fit-content'}}
+          style={{marginBottom:'20px', width: 'fit-content',
+            fontFamily:'Arial, sans-serif', fontWeight:'bold'}}
         >
           로그아웃
         </div>

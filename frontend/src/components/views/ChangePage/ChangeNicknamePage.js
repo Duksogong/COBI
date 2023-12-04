@@ -3,6 +3,10 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { changeNickname } from "../../../_actions/nickname_action";
 
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import { FaChevronLeft } from "react-icons/fa6";
+
 function ChangeNicknamePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,7 +26,7 @@ function ChangeNicknamePage() {
     dispatch(changeNickname(body))
     .then( response => {
       if(response.payload.success) {
-        navigate('/');
+        navigate('/change_category');
       } else {
         alert('Error');
       }
@@ -33,22 +37,38 @@ function ChangeNicknamePage() {
 
 
   return (
-    <div style={{ 
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', height: '100vh'
-  }}>
-    <form style={{display: 'flex', flexDirection: 'column'}}
-      onSubmit={onSubmitHandler}>
+    <div className="d-flex flex-column" style={{height: '100vh', position: 'relative'}}>
+      <Navbar expand="lg" className="bg-body-tertiary">
+        <Container fluid>
+          <Navbar.Brand href="/change_category"
+            style={{display:'flex', alignItems: 'center', justifyContent: 'center'}}  
+          >
+            <FaChevronLeft style={{marginRight:'10px', fontSize:'1.3em'}}/>
+            <div>닉네임 변경</div>
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
 
-      <label>new nickname</label>
-      <input type="text" value={Nickname} onChange={onNicknameHandler} />
-      
-      <br />
-      <button type="submit">
-        Change
-      </button>
-    </form>
-  </div>
+      <form style={{display: 'flex', flexDirection: 'column', padding:'2em 3em'}}
+        className="flex-grow-1" onSubmit={onSubmitHandler}>
+
+        <label style={{fontFamily:'Arial, sans-serif',
+          fontSize:'22px', fontWeight:'500', display: 'flex',
+          alignItems: 'center'}}>변경 닉네임</label>
+        <input type="text" value={Nickname} onChange={onNicknameHandler}
+          style={{borderColor:'#A9B388', borderRadius:'8px', borderStyle:'solid',
+            height:'3.2rem', marginBottom:'16px'}}/>
+        
+        <button type="submit"
+          style={{position: 'absolute', bottom: 0, left: 0, right: 0, height:'48px',
+            backgroundColor:'#A9B388', fontFamily:'Arial, sans-serif',
+            fontSize:'22px', fontWeight:'bold', color:'white', display: 'flex',
+            alignItems: 'center',justifyContent: 'center', border:'none'}}>
+          저장하기
+        </button>
+      </form>
+
+    </div>
   )
 }
 
