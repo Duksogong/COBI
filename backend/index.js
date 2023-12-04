@@ -37,6 +37,10 @@ const { Bookmark } = require("./models/Bookmark");
 const { Category } = require("./models/Category");
 const { Review } = require("./models/Review");
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+
 const { auth } = require("./middleware/auth");
 // const { Comment } = require("./Category"); // 이거 왜 ./models/Comment라고 하면 빨간줄 뜨지
 const { Reply } = require("./models/Reply");
@@ -63,7 +67,6 @@ app.get("/api/users", (req, res) => {
 
 app.post("/api/users/register", (req, res) => {
     const user = new User(req.body);
-
     user.save()
         .then(() => {
             // 사용자 등록 성공
@@ -171,19 +174,19 @@ app.post("/api/users/reset_password", auth, (req, res) => {
                                     { _id: req.user._id },
                                     { password: hash }
                                 )
-                                    .then(() => {
-                                        res.status(200).json({
-                                            hashSuccess: true,
-                                            message: "비밀번호 변경 성공",
-                                        });
-                                    })
-                                    .catch((err) => {
-                                        res.json({
-                                            hashSuccess: false,
-                                            message: "비밀번호 변경 실패",
-                                            error: err,
-                                        });
+                                .then(() => {
+                                    res.status(200).json({
+                                        hashSuccess: true,
+                                        message: "비밀번호 변경 성공",
                                     });
+                                })
+                                .catch((err) => {
+                                    res.json({
+                                        hashSuccess: false,
+                                        message: "비밀번호 변경 실패",
+                                        error: err,
+                                    });
+                                });
                             });
                         } else {
                             return res.json({
@@ -200,8 +203,7 @@ app.post("/api/users/reset_password", auth, (req, res) => {
                 } else {
                     return res.json({
                         ifSuccess: false,
-                        message:
-                            "새 비밀번호가 현재 비밀번호와 같으면 안됩니다",
+                        message:"새 비밀번호가 현재 비밀번호와 같으면 안됩니다",
                     });
                 }
             });
@@ -265,6 +267,7 @@ app.get("/api/users/user_categories", (req, res) => {
             res.status(500).send(err);
         });
 });
+
 
 app.post("/api/users/select_category", auth, (req, res) => {
     const { userId, categoryId } = req.body;
