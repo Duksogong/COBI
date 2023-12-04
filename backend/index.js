@@ -29,9 +29,6 @@ app.use("/api/users", userRoutes);
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/api/review", reviewRoutes);
 
-const reviewRoutes = require("./routes/reviewRoutes");
-app.use("/api/review", reviewRoutes);
-
 //서버 실행
 app.listen(port, () => {
     console.log(`app listening on port ${port}`);
@@ -45,7 +42,7 @@ const { Review } = require("./models/Review");
 
 const { auth } = require("./middleware/auth");
 const { Comment } = require("./models/Comment");
-const { Reply } = require("./models/Reply");
+//const { Reply } = require("./models/Reply");
 
 //===============================================================================
 
@@ -115,8 +112,40 @@ app.post("/api/users/login", (req, res) => {
         })
         .catch((err) => {
             return res.status(400).send(err);
+        })
+    })
+
+app.post("/api/users/reset_nickname", auth, (req, res) => {
+    //const user = new User(req.body)
+        const newNickname = req.body.newNickname;
+    
+        // 현재 사용자의 닉네임을 업데이트
+        User.findOneAndUpdate(
+            { _id: req.user._id },
+            { nickname: newNickname },
+            { new: true } // 업데이트된 문서를 반환하도록 설정
+        )
+        .then((updatedUser) => {
+            if (!updatedUser) {
+                return res.json({
+                    success: false,
+                    message: "닉네임 변경 실패",
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: "닉네임 변경 성공",
+            });
+        })
+        .catch((err) => {
+            res.json({
+                success: false,
+                message: "닉네임 변경 실패",
+                error: err,
+            });
         });
-});
+
+    });
 
 app.get("/api/users/auth", auth, (req, res) => {
     res.status(200).json({
