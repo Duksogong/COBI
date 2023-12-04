@@ -1,3 +1,5 @@
+// app.js
+
 const express = require("express");
 const app = express();
 const port = 5000;
@@ -26,9 +28,15 @@ app.use("/api/search", searchRoutes);
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/api/review", reviewRoutes);
 
+const commentRoutes = require("./routes/commentRoutes"); 
+app.use("/api/comments", commentRoutes); 
+
+
 const { User } = require("./models/User");
 const { UserCategory } = require("./models/UserCategory");
 const { Bookmark } = require("./models/Bookmark");
+
+
 
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
