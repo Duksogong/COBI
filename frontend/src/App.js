@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import TestSearch from './components/views/TestPage/TestSearch';
 import TestSearchReviews from "./components/views/TestPage/TestSearchReviews";
 import TestMyReview from './components/views/TestPage/TestMyReview';
+import TestAdvice from './components/views/TestPage/TestAdvice';
 
 import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
@@ -23,6 +24,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/test/advice" element={<TestAdvice />} />
         <Route path="/test/search" element={<TestSearch />} />
         <Route path="/test/searchReviews" element={<TestSearchReviews />} />
         <Route path="/test/myReview" element={<TestMyReview />} />
