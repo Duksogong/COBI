@@ -4,7 +4,6 @@ export const FIND_USER = "find_user";
 
 export const CHANGE_NICKNAME = "change_nickname";
 
-
 export const SEARCH_BOOK_TITLE = "search_book_title";
 export const SEARCH_BOOK_ISBN = "search_book_isbn";
 export const SEARCH_REVIEW = "search_review";

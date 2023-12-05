@@ -3,7 +3,7 @@ const router = express.Router()
 
 const { User } = require('../models/User')
 
-router.get("/:userId", async (req, res) => {
+router.get("/userInfo/:userId", async (req, res) => {
   const { userId } = req.params;
   
   try {
@@ -19,6 +19,13 @@ router.get("/:userId", async (req, res) => {
       result: user
     })
   } catch(err) {
+    if (err.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid userId format",
+      });
+    }
+    
     return res.status(500).json({
       success: false,
       error: err.message

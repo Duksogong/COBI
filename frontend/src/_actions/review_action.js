@@ -22,7 +22,7 @@ export function getReview() {
 }
 
 export function getFeed() {
-    const request = axios.get("/api/review/feed")
+    const request = axios.get('/api/review/feed')
         .then(response => response.data)
 
     return {
@@ -32,7 +32,7 @@ export function getFeed() {
 }
 
 export function getRec() {
-    const request = axios.get("/api/review/rec")
+    const request = axios.get('/api/review/rec')
         .then(response => response.data)
 
     return {

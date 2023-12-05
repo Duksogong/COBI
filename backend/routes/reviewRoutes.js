@@ -104,19 +104,8 @@ router.get('/feed', auth, async (req, res) => {
     }
     
     try {
-        const categoryId = await UserCategory.find({ userId: userId})
-            .then(result => result.map(item => item.categoryId))
+        var reviews = await Review.find({}).sort({created_at: -1})
 
-        var reviews = [];
-        if(categoryId && categoryId.length !== 0) { //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
-            for(var i = 0; i < categoryId.length; i++) {
-                const review = await Review.find({ category: categoryId[i] });
-                if (review && review.length !== 0) reviews.push(...review);
-            }
-            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        } else { //카테고리가 없는 경우, 모든 감상평을 최신순으로...
-            reviews = await Review.find({}).sort({created_at: -1})
-        }
         return res.status(200).json({
             success: true,
             reviews: reviews,
@@ -140,24 +129,17 @@ router.get('/rec', auth, async(req, res) => {
     }
 
     try{
-        const categoryId = await UserCategory.find({ userId: userId})
+        const categoryId = await UserCategory.find({ userId })
             .then(result => result.map(item => item.categoryId))
 
         var reviews = [];
-        if(categoryId && categoryId.length !== 0) { //카테고리가 있는 경우, 
-            for(var i = 0; i < categoryId.length; i++) {
-                const review = await Review.find({ category: categoryId[i] });
-                if (review && review.length !== 0) 
-                reviews.push(...review);
-            }
-            
-        } else { //카테고리가 없는 경우, 
-            reviews = await Review.find({})
-        }
 
-        //북마크 순으로 정렬...
-        //...
-
+        if(categoryId && categoryId.length) { 
+            //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
+            reviews = await Review.find({ category: { $in: categoryId }});
+            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        } 
+        
         return res.status(200).json({
             success: true,
             reviews: reviews,
