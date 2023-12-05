@@ -53,9 +53,7 @@ const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
 
 const { Comment } = require("./models/Comment");
-const { Reply } = require("./models/Reply");
-
-const { Category } = require("./models/Category");
+//const { Reply } = require("./models/Reply");
 
 app.use(router);
 
@@ -141,24 +139,15 @@ app.get("/api/users/auth", auth, (req, res) => {
 });
 
 app.get("/api/users/logout", auth, (req, res) => {
-  User.findOneAndUpdate({ _id: req.user._id }, { token: "" })
+    User.findOneAndUpdate({ _id: req.user._id }, { token: "" })
     .then(() => {
-      res.status(200).send({
-        success: true,
-      });
+        res.status(200).send({
+            success: true,
+        });
     })
     .catch((err) => {
-      res.json({ success: false, err });
+        res.status(500).json({ success: false, error: err.message });
     });
-    User.findOneAndUpdate({ _id: req.user._id }, { token: "" })
-        .then(() => {
-            res.status(200).send({
-                success: true,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json({ success: false, error: err.message });
-        });
 });
 
 app.post("/api/users/reset_password", auth, (req, res) => {
