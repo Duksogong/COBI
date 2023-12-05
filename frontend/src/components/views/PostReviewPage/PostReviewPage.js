@@ -58,13 +58,6 @@ function PostReviewPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleKeyPress = (e) => {
-        e.preventDefault();
-        if (e.key === "Enter") {
-            searchBooks();
-        }
-    };
-
     const searchBooks = (e) => {
         e.preventDefault();
         console.log(search);
@@ -133,6 +126,7 @@ function PostReviewPage() {
             title,
             review,
             category,
+            bookimage,
         };
 
         if (images.length > 0) {
@@ -145,6 +139,7 @@ function PostReviewPage() {
             formData.append("title", title);
             formData.append("review", review);
             formData.append("category", category);
+            formData.append("bookimage", bookimage);
 
             // 이미지 파일을 FormData에 추가
             images.forEach((image, index) => {
@@ -188,7 +183,6 @@ function PostReviewPage() {
 
                     <Input
                         type="text"
-                        onKeyPress={handleKeyPress}
                         name={"search"} // useInputs의 [event.target.name]
                         onChange={onChangeForm}
                     />
