@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { searchBook, searchReview } from '../../../_actions/search_action';
+import { searchBook } from '../../../_actions/search_action';
 
 import NavBar from '../NavBar/NavBar';
 import Footer from '../Footer/Footer';
@@ -43,10 +43,14 @@ function SearchPage() {
     <div className="d-flex flex-column" style={{height: '100vh'}}>
       <NavBar />
       <div className="d-flex flex-column align-items-center flex-grow-1">
-        <div style={{ width:'100%', padding:'20px' ,fontSize: '20px', fontWeight:'bold' }}>검색어 - {searchText}(10)</div>
+        <div style={{ width:'100%', padding:'20px' ,fontSize: '20px', fontWeight:'bold' }}>검색어 - {searchText}({searchResults.length})</div>
         <div style={{ margin:'15px', marginTop:'0px', height: '35.5em', overflow:'auto', scrollbarWidth: 'thin', msOverflowStyle: 'none' }}>
           <style>{`::-webkit-scrollbar { display: none;}`}</style>
-          {searchResults.map((result, idx) => (
+          {searchResults.length === 0 && (
+            <p>검색된 작품이 없습니다.</p>
+          )}
+
+          {searchResults.length > 0 && searchResults.map((result, idx) => (
             <Card key={idx} onClick={() => onClickHandler(idx)} style={{ margin:'10px'}}>
               <Container>
                 <Row>
@@ -64,7 +68,7 @@ function SearchPage() {
             </Card>
           ))}
         </div>
-        <div style={{ margin:'10px' }}>
+        {/* <div style={{ margin:'10px' }}>
           <Pagination>
             <Pagination.Prev />
             <Pagination.Item>{11}</Pagination.Item>
@@ -72,7 +76,7 @@ function SearchPage() {
             <Pagination.Item>{13}</Pagination.Item>
             <Pagination.Next />
           </Pagination>
-        </div>
+        </div> */}
       </div>
       <Footer />
     </div>

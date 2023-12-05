@@ -7,7 +7,7 @@ import TestAdvice from './components/views/TestPage/TestAdvice';
 import TestMyReview from "./components/views/TestPage/TestMyReview";
 import Test from "./components/views/TestPage/TestPage";
 
-import SearchPage from "./components/views/SearchPage/SearchPage";
+import SearchPage from "./components/views/SearchPage/SearchBook";
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
 import LoginPage from "./components/views/LoginPage/LoginPage";
