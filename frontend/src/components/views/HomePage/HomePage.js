@@ -19,8 +19,9 @@ function HomePage() {
   
   useEffect(() => {
     // 현재 브라우저 쿠키에서 값(토큰) 가져오기
-    const cookies = document.cookie.split('='); 
-    setCookie(cookies[1]);
+    const sample = document.cookie.split('=');
+    const cookies = sample[1].split(';');
+    setCookie(cookies[0]);
   }, []);
   
   useEffect(() => {
