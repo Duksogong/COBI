@@ -26,6 +26,9 @@ mongoose
     .then(() => console.log("MongoDB 연결됨..."))
     .catch((err) => console.log(err));
 
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/users", userRoutes);
+
 const searchRoutes = require("./routes/searchRoutes");
 app.use("/api/search", searchRoutes);
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { searchBook } from '../../../_actions/search_action';
+import { searchBookTitle } from '../../../_actions/search_action';
 
 import NavBar from '../NavBar/NavBar';
 import Footer from '../Footer/Footer';
@@ -15,7 +15,7 @@ function SearchPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [searchResults, setSearchResults] = useState(["none"])
+  const [searchResults, setSearchResults] = useState([])
 
   // useParams 훅을 사용하여 searchText 추출
   const { searchText } = useParams();
@@ -26,7 +26,7 @@ function SearchPage() {
     }
 
     //책 목록 가져오기
-    dispatch(searchBook(body))
+    dispatch(searchBookTitle(body))
       .then(response => {
         if(response.payload.success) {
           setSearchResults(response.payload.result.items)
@@ -36,7 +36,7 @@ function SearchPage() {
 
   const onClickHandler = (idx) => {
     const book = searchResults[idx]
-    navigate(`search/${book.isbn}`)
+    navigate(`/search/review/${book.isbn}`)
   }
 
   return (

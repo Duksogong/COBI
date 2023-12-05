@@ -1,10 +1,12 @@
 export const LOGIN_USER = "login_user";
 export const REGISTER_USER = "register_user";
+export const FIND_USER = "find_user";
 
 export const CHANGE_NICKNAME = "change_nickname";
 
 
-export const SEARCH_BOOK = "search_book";
+export const SEARCH_BOOK_TITLE = "search_book_title";
+export const SEARCH_BOOK_ISBN = "search_book_isbn";
 export const SEARCH_REVIEW = "search_review";
 
 export const CHANGE_PASSWORD = "change_password";

@@ -8,6 +8,7 @@ import TestMyReview from "./components/views/TestPage/TestMyReview";
 import Test from "./components/views/TestPage/TestPage";
 
 import SearchPage from "./components/views/SearchPage/SearchBook";
+import SearchReviewPage from "./components/views/SearchPage/SearchReview";
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
 import LoginPage from "./components/views/LoginPage/LoginPage";
@@ -35,6 +36,7 @@ function App() {
         <Route path="/test/myReview" element={<TestMyReview />} />
 
         <Route path="/search/:searchText" element={<SearchPage />} />
+        <Route path="/search/review/:isbn" element={<SearchReviewPage />} />
           
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
