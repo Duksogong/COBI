@@ -6,6 +6,9 @@ router.use(cookieParser());
 
 const { auth } = require("../middleware/auth");
 const { Review } = require("../models/Review");
+const { Category } = require("../models/Category");
+const { UserCategory } = require("../models/UserCategory");
+const { Bookmark } = require('../models/Bookmark')
 const { Image } = require("../models/Image");
 
 // 이미지 업로드를 위한 Multer 및 Memory Storage 설정
@@ -89,6 +92,83 @@ router.get("/user", auth, async (req, res) => {
         });
     }
 });
+
+// 피드 감상평 조회
+router.get('/feed', auth, async (req, res) => {
+    const userId = req.user._id;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+    
+    try {
+        const categoryId = await UserCategory.find({ userId: userId})
+            .then(result => result.map(item => item.categoryId))
+
+        var reviews = [];
+        if(categoryId && categoryId.length !== 0) { //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
+            for(var i = 0; i < categoryId.length; i++) {
+                const review = await Review.find({ category: categoryId[i] });
+                if (review && review.length !== 0) reviews.push(...review);
+            }
+            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        } else { //카테고리가 없는 경우, 모든 감상평을 최신순으로...
+            reviews = await Review.find({}).sort({created_at: -1})
+        }
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
+
+// 추천 감상평 조회
+router.get('/rec', auth, async(req, res) => {
+    const userId = req.user._id;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+
+    try{
+        const categoryId = await UserCategory.find({ userId: userId})
+            .then(result => result.map(item => item.categoryId))
+
+        var reviews = [];
+        if(categoryId && categoryId.length !== 0) { //카테고리가 있는 경우, 
+            for(var i = 0; i < categoryId.length; i++) {
+                const review = await Review.find({ category: categoryId[i] });
+                if (review && review.length !== 0) 
+                reviews.push(...review);
+            }
+            
+        } else { //카테고리가 없는 경우, 
+            reviews = await Review.find({})
+        }
+
+        //북마크 순으로 정렬...
+        //...
+
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
 
 // 특정 리뷰 조회
 router.get("/:reviewId", auth, async (req, res) => {

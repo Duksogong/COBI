@@ -5,6 +5,7 @@ import TestSearch from "./components/views/TestPage/TestSearch";
 import TestSearchReviews from "./components/views/TestPage/TestSearchReviews";
 import TestAdvice from './components/views/TestPage/TestAdvice';
 import TestMyReview from "./components/views/TestPage/TestMyReview";
+import Test from "./components/views/TestPage/TestPage";
 
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
@@ -26,6 +27,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/test" element={<Test />} />
         <Route path="/test/advice" element={<TestAdvice />} />
         <Route path="/test/search" element={<TestSearch />} />
         <Route path="/test/searchReviews" element={<TestSearchReviews />} />
