@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addReview } from "../../../_actions/review_action";
 import { IoIosSearch } from "react-icons/io";
-import { searchBook } from "../../../_actions/search_action";
+import { searchBookTitle } from "../../../_actions/search_action";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
 
@@ -73,7 +73,7 @@ function PostReviewPage() {
             alert("검색어를 입력하세요.");
             return; // 검색어가 비어 있으면 함수 종료
         }
-        dispatch(searchBook({ query: search })).then((response) => {
+        dispatch(searchBookTitle({ query: search })).then((response) => {
             if (response.payload.success) {
                 setSearchResults(response.payload.result.items);
             } else {
