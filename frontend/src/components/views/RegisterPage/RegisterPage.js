@@ -41,7 +41,7 @@ function RegisterPage() {
     dispatch(registerUser(body))
     .then( response => {
       if(response.payload.success) {
-        navigate('/login');
+        navigate('/');
       } else {
         alert('회원가입 실패');
       }
@@ -94,12 +94,11 @@ function RegisterPage() {
 
           </div>
 
-
           <button style={{margin:"30px 0px", borderRadius:'25px', height:'48px',
             backgroundColor:'#A9B388', fontFamily:'Arial, sans-serif',
             fontSize:'22px', fontWeight:'bold', color:'white', display: 'flex',
             alignItems: 'center',justifyContent: 'center', border:'none'}}
-            onClick={() => { navigate(`/login`); }} type="submit"
+            type="submit"
           >
             회원가입
           </button>

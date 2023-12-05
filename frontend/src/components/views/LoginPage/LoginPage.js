@@ -66,7 +66,7 @@ function LoginPage() {
             backgroundColor:'#A9B388', fontFamily:'Arial, sans-serif',
             fontSize:'22px', fontWeight:'bold', color:'white', display: 'flex',
             alignItems: 'center',justifyContent: 'center', border:'none'}}
-            onClick={() => { navigate(`/login`); }} type="submit"
+            type="submit"
           >
             로그인
           </button>
