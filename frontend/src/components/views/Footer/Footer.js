@@ -38,7 +38,7 @@ function Footer() {
         </Link>
       </div>
       <div>
-        <Link to="post_review" className="nav-link" onClick={() => setActiveNav(4)}>
+        <Link to="/post_review" className="nav-link" onClick={() => setActiveNav(4)}>
           <div style={activeNav === 4 ? {color: '#5F6F52'} : {}}>
             <div><LuPencilLine /></div>
             <div>글쓰기</div>
