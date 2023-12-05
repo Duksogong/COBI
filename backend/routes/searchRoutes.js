@@ -23,9 +23,23 @@ router.get('/book/title', (req, res) => {
 
   axios.get(api_url, { headers })
     .then(response => {
+      const books = response.data.items.map(item => ({
+        title: item.title,
+        link: item.link,
+        image: item.image,
+        author: item.author,
+        publisher: item.publisher,
+        pubdate: item.pubdate,
+        isbn: item.isbn,
+      }))
+
       res.status(200).json({
         success: true,
-        result: response.data,
+        result: {
+          total: response.data.total,
+          start: response.data.start,
+          items: books,
+        }
       })
     })
     .catch(err => {

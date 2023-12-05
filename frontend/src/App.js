@@ -7,6 +7,7 @@ import TestAdvice from './components/views/TestPage/TestAdvice';
 import TestMyReview from "./components/views/TestPage/TestMyReview";
 import Test from "./components/views/TestPage/TestPage";
 
+import SearchPage from "./components/views/SearchPage/SearchPage";
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
 import LoginPage from "./components/views/LoginPage/LoginPage";
@@ -32,6 +33,8 @@ function App() {
         <Route path="/test/search" element={<TestSearch />} />
         <Route path="/test/searchReviews" element={<TestSearchReviews />} />
         <Route path="/test/myReview" element={<TestMyReview />} />
+
+        <Route path="/search/:searchText" element={<SearchPage />} />
           
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
