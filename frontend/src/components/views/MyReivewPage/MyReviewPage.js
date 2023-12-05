@@ -20,7 +20,7 @@ function MyReviewPage() {
 
   const [option, setOption] = useState("최신순")
   const [reviews, setReviews] = useState([])
-  const [books, setBooks] = useState({})
+  //const [books, setBooks] = useState({})
 
   useEffect(() => {
     //감상평 목록 가져오기
@@ -32,41 +32,41 @@ function MyReviewPage() {
       })
   }, [])
 
-  useEffect(() => {
-    //각 감상평에 대한 책 정보 저장
-    const fetch = async () => {
-      const bookDetails = {}
+  // useEffect(() => {
+  //   //각 감상평에 대한 책 정보 저장
+  //   const fetch = async () => {
+  //     const bookDetails = {}
 
-      //책 정보 불러오기
-      const fetchBookDetail = async (isbn) => {
-        try {
-          let body = {
-            query: isbn,
-          }
+  //     //책 정보 불러오기
+  //     const fetchBookDetail = async (isbn) => {
+  //       try {
+  //         let body = {
+  //           query: isbn,
+  //         }
 
-          const response = await dispatch(searchBookISBN(body))
-          if(response.payload.success) {
-            return response.payload.result
-          } else {
-            return { title: "unknown" }
-          }
-        } catch (err) {
-          return { title: "unknown" }
-        }
-      }
+  //         const response = await dispatch(searchBookISBN(body))
+  //         if(response.payload.success) {
+  //           return response.payload.result
+  //         } else {
+  //           return { title: "unknown" }
+  //         }
+  //       } catch (err) {
+  //         return { title: "unknown" }
+  //       }
+  //     }
 
-      //Promise.all을 사용하여 비동기 작업을 병렬로 처리
-      await Promise.all(reviews.map(async (review) => {
-        const isbn = review.isbn
-        if(!books[isbn]) {
-          const book = await fetchBookDetail(isbn)
-          bookDetails[isbn] = book
-        }
-      }))
-      setBooks((prevBooks) => ({ ...prevBooks, ...bookDetails }))
-    }
-    fetch()
-  }, [reviews])
+  //     //Promise.all을 사용하여 비동기 작업을 병렬로 처리
+  //     await Promise.all(reviews.map(async (review) => {
+  //       const isbn = review.isbn
+  //       if(!books[isbn]) {
+  //         const book = await fetchBookDetail(isbn)
+  //         bookDetails[isbn] = book
+  //       }
+  //     }))
+  //     setBooks((prevBooks) => ({ ...prevBooks, ...bookDetails }))
+  //   }
+  //   fetch()
+  // }, [reviews])
 
   const onOptionDate = () => {
     setOption("최신순")
@@ -129,13 +129,13 @@ function MyReviewPage() {
                   <div>
                     <img style={{width:"50px", height:"70px", marginRight:'10px',
                       borderRadius: "10%", objectFit: "cover",}}
-                      src="http://dummyimage.com/50x70/ced4da/6c757d.jpg"
+                      src={result.bookimage ? result.bookimage : "http://dummyimage.com/50x70/ced4da/6c757d.jpg" }
                       alt="Image Alt Text"/>
                   </div>
                   <div style={{width: '260px', fontSize:'16px', 
                     display:'flex', flexDirection: 'column', justifyContent:'space-around'}}>
                     <div style={{ margin:'5px', fontSize:'15px', fontWeight:'bold', maxWidth:'260px', whiteSpace: 'nowrap', overflow:'hidden', textOverflow: 'ellipsis' }}>
-                      책제목 : {books[result.isbn] ? books[result.isbn].title : "unknown"}
+                      책제목 : {result.booktitle ? result.booktitle : "unknown"}
                     </div>
                     <div style={{ margin:'5px', fontSize:'15px', fontWeight:'bold', maxWidth:'260px', whiteSpace: 'nowrap', overflow:'hidden', textOverflow: 'ellipsis' }}>
                       글제목 : {result.title}
