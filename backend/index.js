@@ -411,28 +411,9 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
         });
 });
 
-app.post("/api/comments", (req, res) => {
-    const { author, content } = req.body;
 
-    const newComment = new Comment({
-        author,
-        content,
-        timestamp: new Date().toISOString(),
-    });
 
-    newComment
-        .save()
-        .then((comment) => {
-            res.json({ success: true, comment });
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).json({
-                success: false,
-                message: "내부 서버 오류.",
-            });
-        });
-});
+
 
 // router.post("/api.comments/:commentId/replies", (req, res) => {
 //     const { commentId } = req.params;
@@ -477,4 +458,3 @@ app.post("/api/comments", (req, res) => {
 //
 // module.exports = router;
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -1,61 +1,69 @@
+// commentRoutes.js
+
 const express = require("express");
 const router = express.Router();
 const { Comment } = require("../models/Comment");
-const Reply = require("../models/Reply");
 
-router.post("/api/comments", (req, res) => {
-    const { username, content } = req.body;
-
-    const newComment = new Comment({
-        author: username,
-        content,
-        timestamp: new Date().toISOString(),
+// 모든 댓글 조회
+router.get("/", (req, res) => {
+  Comment.find({})
+    .then((comments) => {
+      res.json({ comments });
+    })
+    .catch((error) => {
+      console.error("댓글 가져오기 중 오류 발생:", error);
+      res.status(500).json({ success: false, message: "내부 서버 오류." });
     });
-
-    newComment
-        .save()
-        .then((comment) => {
-            res.json({ success: true, comment, message: "댓글이 성공적으로 등록되었습니다." });
-        })
-        .catch((error) => {
-            console.error("댓글 저장 중 오류 발생:", error);
-            res.status(500).json({ success: false, message: "내부 서버 오류." });
-        });
 });
 
-// router.post("/api/comments/:commentId/replies", async (req, res) => {
-//     try {
-//         const { commentId } = req.params;
-//         const { author, content } = req.body;
+// 특정 리뷰에 대한 댓글 조회
+router.get('/:reviewId', (req, res) => {
+  const { reviewId } = req.params;
 
-//         const newComment = new Comment({
-//             author,
-//             content,
-//             timestamp: new Date().toISOString(),
-//         });
+  Comment.find({ reviewId })
+    .then((comments) => {
+      res.json({ comments });
+    })
+    .catch((error) => {
+      console.error('댓글 가져오기 중 오류 발생:', error);
+      res.status(500).json({ success: false, message: '내부 서버 오류.' });
+    });
+});
 
-//         const savedComment = await newComment.save();
+// ... (이전 코드)
 
-//         const newReply = new Reply({
-//             commentId: savedComment._id,
-//             author,
-//             content,
-//             timestamp: new Date().toISOString(),
-//         });
+// 새로운 댓글 작성
+router.post('/', async (req, res) => {
+  const { reviewId, content, author } = req.body; // 수정된 부분
 
-//         const savedReply = await newReply.save();
+  try {
+    // 댓글을 MongoDB에 저장
+    const newComment = new Comment({
+      reviewId,
+      content, // 수정된 부분
+      author: author || 'CurrentUser', // 현재는 고정값으로 지정되어 있으므로 필요에 따라 수정
+      timestamp: Date.now(), // timestamp를 추가하고 현재 시간으로 설정
+      // 다른 필요한 댓글 속성 추가
+      // author, timestamp 등
+    });
 
-//         const updatedComment = await Comment.findByIdAndUpdate(
-//             commentId,
-//             { $push: { replies: savedReply._id } },
-//             { new: true }
-//         ).exec();
+    await newComment.save();
 
-//         res.json({ success: true, comment: updatedComment });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ success: false, message: "내부 서버 오류." });
-//     }
-// });
+    res.status(201).json({
+      success: true,
+      message: '댓글 작성 성공',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '댓글 작성 실패',
+      error: error.message,
+    });
+  }
+});
+
+// ... (이전 코드)
+
 
 module.exports = router;
