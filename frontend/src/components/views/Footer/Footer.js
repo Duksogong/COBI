@@ -22,7 +22,7 @@ function Footer() {
         </Link>
       </div>
       <div>
-        <Link to="#" className="nav-link" onClick={() => setActiveNav(2)}>
+        <Link to="/my_review" className="nav-link" onClick={() => setActiveNav(2)}>
           <div style={activeNav === 2 ? {color: '#5F6F52'} : {}}>
             <div><IoBookOutline /></div>
             <div>내감상평</div>

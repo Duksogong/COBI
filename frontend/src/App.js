@@ -21,6 +21,7 @@ import ChangePasswordPage from "./components/views/ChangePage/ChangePasswordPage
 import ChangeCategoryPage from "./components/views/CategoryPage/CategoryPage";
 
 import MyBookmarkPage from "./components/views/MyBookmarkPage/MyBookmarkPage";
+import MyReviewPage from "./components/views/MyReivewPage/MyReviewPage";
 
 import ReviewDetailPage from "./components/views/ReviewDetailPage/ReviewDetailPage";
 import PostReviewPage from "./components/views/PostReviewPage/PostReviewPage";
@@ -49,7 +50,8 @@ function App() {
         <Route path="/change_category" element={<ChangeCategoryPage />} />
 
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
-          
+        <Route path="/my_review" element={<MyReviewPage />} />
+
         <Route path="/post_review" element={<PostReviewPage />} />
 
         <Route path="/review_detail/:reviewId/:currentUser" element={<ReviewDetailPage />} />

@@ -99,7 +99,6 @@ function HomePage() {
       //Promise.all을 사용하여 비동기 작업을 병렬로 처리
       await Promise.all(reviews.map(async (review) => {
         const userId = review.user
-        const categoryId = review.category
         if(!authors[userId]) {
           const user = await fetchUserDetail(userId)
           authorDetails[userId] = user

@@ -13,7 +13,8 @@ export function addReview(dataToSubmit) {
 }
 
 export function getReview() {
-    const request = axios.get("/api/review").then((response) => response.data);
+    const request = axios.get("/api/review/user")
+        .then(response => response.data);
 
     return {
         type: GET_REVIEW,

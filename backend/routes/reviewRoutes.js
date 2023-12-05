@@ -6,9 +6,7 @@ router.use(cookieParser());
 
 const { auth } = require("../middleware/auth");
 const { Review } = require("../models/Review");
-const { Category } = require("../models/Category");
 const { UserCategory } = require("../models/UserCategory");
-const { Bookmark } = require('../models/Bookmark')
 const { Image } = require("../models/Image");
 
 // 이미지 업로드를 위한 Multer 및 Memory Storage 설정

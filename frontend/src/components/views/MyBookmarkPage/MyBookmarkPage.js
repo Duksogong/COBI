@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
- 
+
 import NavBar from '../NavBar/NavBar';
 import Footer from '../Footer/Footer';
 import Card from 'react-bootstrap/Card';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function MyBookmarkPage() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function MyBookmarkPage() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
 
+  const [option, setOption] = useState("최신순")
+  
   const [bookmarks, setBookmarks] = useState([]);
   const [selectedBookMarks, setSelectedBookMarks] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -84,6 +87,22 @@ function MyBookmarkPage() {
   /* 감상평 데이터 */
   console.log("감상평 데이터: ", reviews);
 
+  const onOptionDate = () => {
+    setOption("최신순")
+    //setReviews([...reviews].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+  }
+
+  const onOptionDictionary = () => {
+    setOption("사전순")
+    // setReviews([...reviews].sort((a, b) => {
+    //   const titleA = a.title || ""; // null 또는 undefined인 경우 빈 문자열로 대체
+    //   const titleB = b.title || ""; // null 또는 undefined인 경우 빈 문자열로 대체
+  
+    //   // 비교 함수를 통해 정렬, null 또는 undefined인 경우를 고려하여 처리
+    //   return titleA.localeCompare(titleB);
+    // }))
+  }
+
   const handleReviewClick = (reviewId, currentUser) => {
     // 리뷰 클릭 시 리뷰 상세 페이지로 이동
     navigate(`/review_detail/${reviewId}/${currentUser}`);
@@ -111,46 +130,66 @@ function MyBookmarkPage() {
       <NavBar />
       
       <div className="d-flex flex-column align-items-center flex-grow-1"
-         style={{justifyContent: 'space-evenly'}}
-      >
-        <div style={{width: '310px'}}>정렬방식</div>
+        style={{justifyContent: 'space-evenly'}}>
+        <div style={{ display:'flex', flexDirection:'row', width:'310px', alignItems: 'center' }}>
+          <span><b>정렬방식</b></span>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic" size="sm"
+            style={{ borderRadius:'20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.3)', marginLeft:'10px', border:'none', backgroundColor:'white', color:'black' }}>
+              {option}
+            </Dropdown.Toggle>
 
+            <Dropdown.Menu
+            style={{ minWidth:'50px', textAlign:'center', padding:'0px' }}>
+              <Dropdown.Item onClick={onOptionDate} active={option === '최신순'}
+              style={{ fontSize:'13px' }}>
+                최신순
+              </Dropdown.Item>
+              <Dropdown.Item onClick={onOptionDictionary} active={option === '사전순'}
+              style={{ fontSize:'13px' }}>
+                사전순
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <style>{`::-webkit-scrollbar { display: none;}`}</style>
         <div style={{ height: '40rem', overflow: 'auto'}}>
-          {details.map((reviewO, index) => ( 
-  
-          <Card 
-            bg="light"  
-            style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.3)', margin:'10px', marginBottom:'20px', border:'none',
-            }}
-          >
-            <div key={index} type="submit" style={{padding: '10px'}}
-              onClick={() => handleReviewClick(reviewO._id, currentUser._id)}
-            >
-              <div style={{display: "flex", flexDirection:"row"}}> 
+          {details.length === 0 && (
+            <p>북마크를 추가해보세요.</p>
+          )}
+          
+          {details.length > 0 && details.map((reviewO, index) => ( 
+            <Card key={index} onClick={() => handleReviewClick(reviewO._id, currentUser._id)}
+              style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.3)', margin:'10px', marginBottom:'20px', border:'none'}}>
+              <div style={{padding: '10px'}}>
+                <div style={{display: "flex", flexDirection:"row"}}> 
+                  <div>
+                    <img style={{width:"50px", height:"70px", marginRight:'10px',
+                      borderRadius: "10%", objectFit: "cover",}}
+                      src="http://dummyimage.com/50x70/ced4da/6c757d.jpg"
+                      alt="Image Alt Text"/>
+                  </div>
+                  <div style={{width: '260px', fontSize:'16px', 
+                    display:'flex', flexDirection: 'column', justifyContent:'space-around'}}>
+                    <div style={{ margin:'5px', fontSize:'15px', fontWeight:'bold', maxWidth:'260px', whiteSpace: 'nowrap', overflow:'hidden', textOverflow: 'ellipsis' }}>
+                      책제목 : {reviewO?.booktitle}
+                    </div>
+                    <div style={{ margin:'5px', fontSize:'15px', fontWeight:'bold', maxWidth:'260px', whiteSpace: 'nowrap', overflow:'hidden', textOverflow: 'ellipsis' }}>
+                      글제목 : {reviewO?.title}
+                    </div>
+                  </div>
+                </div>
                 <div>
-                  <img style={{width:"50px", height:"70px", marginRight:'10px',
-                    borderRadius: "10%", objectFit: "cover",}}
-                    src="http://dummyimage.com/50x70/ced4da/6c757d.jpg"
-                    alt="Image Alt Text"/>
-                </div>
-                <div style={{width: '260px', fontSize:'16px', 
-                  display:'flex', flexDirection: 'column', justifyContent:'space-around'}}>
-                  <div>책 제목 : {reviewO?.booktitle}</div>
-                  <div>글 제목 : {reviewO?.title}</div>
+                  <small style={{ fontSize: '12px' }}>
+                    작성자 닉네임: {
+                      users.find(user => user._id === reviewO.user)
+                      ? users.find(user => user._id === reviewO.user).nickname
+                      : 'unkown'
+                    }
+                  </small>
                 </div>
               </div>
-              <div>
-                <small style={{ fontSize: '12px' }}>
-                  작성자 닉네임: {
-                    users.find(user => user._id === reviewO.user)
-                    ? users.find(user => user._id === reviewO.user).nickname
-                    : 'unkown'
-                  }
-                </small>
-              </div>
-            </div>
-          </Card>
-
+            </Card>
           ))}
         </div>
       </div>
