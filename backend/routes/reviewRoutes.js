@@ -30,19 +30,34 @@ router.post("/", auth, upload.array("images", 3), async (req, res) => {
         const imageIds = [];
 
         // 업로드된 이미지를 순회하며 Image 문서 생성
-        for (const file of req.files) {
-            const image = new Image({
-                image: {
-                    data: file.buffer,
-                    contentType: file.mimetype,
-                },
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const image = new Image({
+                    image: {
+                        data: file.buffer,
+                        contentType: file.mimetype,
+                    },
+                });
+
+                // 이미지를 데이터베이스에 저장
+                const savedImage = await image.save();
+
+                // 이미지 ID를 배열에 추가
+                imageIds.push(savedImage._id);
+            }
+        } else {
+            const review = new Review({
+                ...req.body,
+                user: userId,
+                category,
             });
 
-            // 이미지를 데이터베이스에 저장
-            const savedImage = await image.save();
+            const reviewInfo = await review.save();
 
-            // 이미지 ID를 배열에 추가
-            imageIds.push(savedImage._id);
+            return res.status(200).json({
+                success: true,
+                review: reviewInfo,
+            });
         }
 
         const review = new Review({
