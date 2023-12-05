@@ -23,9 +23,23 @@ router.get('/book/title', (req, res) => {
 
   axios.get(api_url, { headers })
     .then(response => {
+      const books = response.data.items.map(item => ({
+        title: item.title,
+        link: item.link,
+        image: item.image,
+        author: item.author,
+        publisher: item.publisher,
+        pubdate: item.pubdate,
+        isbn: item.isbn,
+      }))
+
       res.status(200).json({
         success: true,
-        result: response.data,
+        result: {
+          total: response.data.total,
+          start: response.data.start,
+          items: books,
+        }
       })
     })
     .catch(err => {
@@ -40,9 +54,19 @@ router.get('/book/isbn', (req, res) => {
 
   axios.get(api_url, { headers })
     .then(response => {
+      const book = response.data.items.map(item => ({
+        title: item.title,
+        link: item.link,
+        image: item.image,
+        author: item.author,
+        publisher: item.publisher,
+        pubdate: item.pubdate,
+        isbn: item.isbn,
+      }))
+
       res.status(200).json({
         success: true,
-        result: response.data
+        result: book[0]
       })
     })
     .catch(err => {
@@ -68,18 +92,23 @@ router.get('/category', (req, res) => {
 router.get('/review', (req, res) => {
   Review.find({ isbn: req.query.query })
     .then((reviews) => {
-      if(!reviews || reviews.length === 0) {
-        return res.json({ 
-          success: true,
-          result: [],
-          message: 'No reviews found for the given ISBN.' 
-        })
-      } else {
-        return res.json({
-          success: true,
-          result: reviews
-        })
-      }
+      return res.json({
+        success: true,
+        result: reviews
+      })
+      
+      // if(!reviews || reviews.length === 0) {
+      //   return res.json({ 
+      //     success: true,
+      //     result: [],
+      //     message: 'No reviews found for the given ISBN.' 
+      //   })
+      // } else {
+      //   return res.json({
+      //     success: true,
+      //     result: reviews
+      //   })
+      // }
     })
     .catch((err) => {
       return res.status(500).json({ error: `Internal Server Error - ${err.message}` })
