@@ -33,6 +33,7 @@ function PostReviewPage() {
             bookimage,
             title,
             review,
+            link,
             category,
             images,
         },
@@ -47,7 +48,7 @@ function PostReviewPage() {
         bookimage: "",
         title: "",
         review: "",
-        user: "",
+        link: "",
         category: "",
         images: [],
     });
@@ -84,9 +85,23 @@ function PostReviewPage() {
             author: selectedBook.author,
             publisher: selectedBook.publisher,
             bookimage: selectedBook.image,
+            link: selectedBook.link,
         }));
+
         setSearchResults([]); // 선택한 후에 검색 결과를 초기화
     };
+    console.log(link);
+    useEffect(() => {
+        axios
+            .get("/api/search/category", { params: { query: link } })
+            .then((response) =>
+                setFormValues((prev) => ({
+                    ...prev,
+                    category: response.data.categoryId,
+                }))
+            )
+            .catch((error) => console.error(error));
+    }, [link]);
 
     const handleImageChange = (e) => {
         const files = e.target.files;
@@ -107,6 +122,7 @@ function PostReviewPage() {
             publisher,
             title,
             review,
+            category,
         };
 
         if (images.length > 0) {
@@ -118,6 +134,7 @@ function PostReviewPage() {
             formData.append("publisher", publisher);
             formData.append("title", title);
             formData.append("review", review);
+            formData.append("category", category);
 
             // 이미지 파일을 FormData에 추가
             images.forEach((image, index) => {
