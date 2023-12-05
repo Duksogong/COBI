@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import logoImgDes from '../../../src_assets/logoImgDes.png';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -12,21 +13,27 @@ function LandingPage() {
   }, [])
   
   return (
-    <div style={{ 
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', minHeight: '32rem', flexDirection: 'column'
-      }}>
-      <img style={{width:"300px", height:"180px"}}
-        src="http://dummyimage.com/300x180/ced4da/6c757d.jpg"
+    <div className="d-flex flex-column align-items-center"
+      style={{height:'840px', display: 'flex',
+      alignItems: 'center',justifyContent: 'center'}}
+    >
+      <img style={{width: '270px', margin:"70px 0px"}}
+        src={logoImgDes}
         alt="Image Alt Text">
       </img>
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <div style={{margin:'10px'}}
-        onClick={() => { navigate(`/login`); }}>
+      <div style={{textAlign:'center', width: '260px'}}>
+        <div style={{margin:"20px 0px", borderRadius:'25px', height:'48px',
+          backgroundColor:'#A9B388', fontFamily:'Arial, sans-serif',
+          fontSize:'22px', fontWeight:'bold', color:'white', display: 'flex',
+          alignItems: 'center',justifyContent: 'center'}}
+          onClick={() => { navigate(`/login`); }}>
           로그인
         </div>
-        <div style={{margin:'10px'}}
-        onClick={() => { navigate(`/register`); }}>
+        <div style={{margin:"20px 0px", borderRadius:'25px', height:'48px',
+          backgroundColor:'#A9B388', fontFamily:'Arial, sans-serif',
+          fontSize:'22px', fontWeight:'bold', color:'white', display: 'flex',
+          alignItems: 'center',justifyContent: 'center'}}
+          onClick={() => { navigate(`/register`); }}>
           회원가입
         </div>
       </div>

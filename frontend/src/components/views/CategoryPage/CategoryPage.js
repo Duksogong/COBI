@@ -4,6 +4,10 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectCategory } from "../../../_actions/category_actions";
 import { deselectCategory } from "../../../_actions/category_actions";
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { FiPlus } from "react-icons/fi";
 
 import NavBar from '../NavBar/NavBar'; // 상대 경로에 주의하여 수정
 import Footer from '../Footer/Footer';
@@ -99,7 +103,7 @@ function CategoryPage() {
     dispatch(selectCategory(body))
     .then( response => {
       if(response.payload.success) {
-        navigate('/change_category');
+        window.location.reload();
       } else {
         alert('카테고리 선택 실패');
       }
@@ -119,7 +123,7 @@ function CategoryPage() {
     dispatch(deselectCategory(body))
     .then( response => {
       if(response.payload.success) {
-        navigate('/change_category');
+        window.location.reload();
       } else {
         alert('카테고리 삭제 실패');
       }
@@ -158,7 +162,7 @@ function CategoryPage() {
     axios.get(`/api/users/logout`)
     .then(response => {
       if (response.data.success) {
-        navigate('/login')
+        navigate('/')
       } else {
         alert("로그아웃하는데 실패했습니다.")
       }
@@ -167,58 +171,92 @@ function CategoryPage() {
 
 
   return (
-    <div>
+    <div className="d-flex flex-column" style={{height: '100vh'}}>
       <NavBar />
 
-      <div style={{ 
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', minHeight: '32rem', flexDirection: 'column'
-      }}>
+      <div className="d-flex flex-column flex-grow-1"
+        style={{overflow: 'auto', padding:'0px 40px'}}
+      >
 
-        <div onClick={() => { navigate(`/change_nickname`); }}>
+        <div style={{ display: 'flex', flexDirection:'column', alignItems: 'center', margin: '40px 0px'}}>
+          <img style={{width:"100px", height:"100px", 
+            borderRadius: "50%", objectFit: "cover",}}
+            src="http://dummyimage.com/100x100/ced4da/6c757d.jpg"
+            alt="Image Alt Text">
+          </img>
+          <Card.Body style={{padding: '0px', 
+            display: 'flex', flexDirection: 'row'}}>
+            <div style={{display:'flex', justifyContent:'space-around', margin:'8px',
+              fontFamily: 'Georgia, Cursive', fontWeight: 'bold', fontSize:'16px', fontStyle:'italic'}}
+            >{
+              currentUser.nickname
+              ? currentUser.nickname : 'unkown'
+            }</div>
+          </Card.Body>
+        </div>
+
+        <div onClick={() => { navigate(`/change_nickname`); }}
+          style={{marginBottom:'20px', width: 'fit-content', 
+          display:'flex', flexDirection:'column', justifyContent:'space-around',
+          fontFamily:'Arial, sans-serif', fontWeight:'bold'}}
+        >
           닉네임 변경
         </div>
 
-        <br/> 
-
-        <div onClick={() => { navigate(`/change_password`); }}>
+        <div onClick={() => { navigate(`/change_password`); }}
+          style={{marginBottom:'20px', width: 'fit-content', 
+          display:'flex', flexDirection:'column', justifyContent:'space-around',
+          fontFamily:'Arial, sans-serif', fontWeight:'bold'}}
+        >
           비밀번호 변경
         </div>
         
-        <form onSubmit={onAddCategory}>
-        <hr/> 
-        <label>Category</label>
-        <select value={selectedCategory} onChange={onCategoryChange}>
-          {categories.map(category => (
-            <option key={category._id} value={category._id}>
-              {category.name}
-            </option>
-          ))}
-        </select>  
-        <button type="submit">
-          추가
-        </button>
-        <hr/>
+        <form onSubmit={onAddCategory}
+          style={{display:'flex', flexDirection:'column', justifyContent:'space-evenly'}}
+        >
+          <div style={{fontFamily:'Arial, sans-serif', fontWeight:'bold'}}>관심 카테고리 설정</div>
+          <div style={{padding:'15px', display:'flex'}}>
+            <Form.Select value={selectedCategory} onChange={onCategoryChange} size="sm"
+              style={{ borderColor: '#A9B388', borderWidth: '2px', color: 'grey'}}>
+              {categories.map(category => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </Form.Select>  
+            <Button size="sm" type="submit"
+              style={{ backgroundColor: '#A9B388', border:'none', marginLeft: '4px', padding:'0px 15px'}}
+            >
+              <FiPlus style={{fontSize:'1.5rem'}}/>
+            </Button>
+          </div>
         </form>
 
         {/* selectedUserCategories 값들을 버튼으로 표시 */}
-        <div>
-          {selectedUserCategories.map((categoryId, index) => (
-            <button key={index} type="submit" onClick={() => onDeleteCategory(categoryId)}>
-              {getCategoryName(categoryId)}
-            </button>
+        <div
+          style={{marginBottom:'20px', display:'flex', padding:'0px 15px', flexWrap: 'wrap'}}
+        >
+          {selectedUserCategories.map((categoryId, index) => (   
+            <Button size="sm" style={{ backgroundColor: 'white', borderColor:'#A9B388', fontSize:'80%',
+              color:'black', width: 'fit-content', margin:'0px 15px 15px 0px'}}
+              key={index} type="submit" onClick={() => onDeleteCategory(categoryId)}
+            >
+              {getCategoryName(categoryId)} X
+            </Button>
           ))}
         </div>
 
         <hr/> 
 
-        <button onClick={onClickHandler}>
+        <div onClick={onClickHandler}
+          style={{marginBottom:'20px', width: 'fit-content',
+            fontFamily:'Arial, sans-serif', fontWeight:'bold'}}
+        >
           로그아웃
-        </button>
+        </div>
 
       </div>
 
-      
       <Footer />
     </div>
   );
