@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_REVIEW, GET_REVIEW, GET_FEED, GET_REC } from "./types";
+import { ADD_REVIEW, GET_REVIEW, GET_FEED, GET_REC, GET_FEED_ISBN, GET_REC_ISBN } from "./types";
 
 export function addReview(dataToSubmit) {
     const request = axios
@@ -37,6 +37,26 @@ export function getRec() {
 
     return {
         type: GET_REC,
+        payload: request,
+    }
+}
+
+export function getFeedIsbn(dataToSubmit) {
+    const request = axios.get(`/api/review/feed/${dataToSubmit}`)
+        .then(response => response.data)
+
+    return {
+        type: GET_FEED_ISBN,
+        payload: request,
+    }
+}
+
+export function getRecIsbn(dataToSubmit) {
+    const request = axios.get(`/api/review/rec/${dataToSubmit}`)
+        .then(response => response.data)
+
+    return {
+        type: GET_REC_ISBN,
         payload: request,
     }
 }

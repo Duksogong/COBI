@@ -19,7 +19,6 @@ import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import Badge from 'react-bootstrap/Badge';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -158,7 +157,7 @@ function HomePage() {
         style={{width:'310px'}}>
           {reviews.length === 0 && (
             <p style={{ height:'30rem', lineHeight:'30rem', textAlign:'center' }}>
-              관심 카테고리를 등록해보세요.
+              감상평이 없습니다.
             </p>
           )}
 

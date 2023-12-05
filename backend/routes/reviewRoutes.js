@@ -118,6 +118,32 @@ router.get('/feed', auth, async (req, res) => {
     }
 })
 
+// 피드 감상평 조회
+router.get('/feed/:isbn', auth, async (req, res) => {
+    const userId = req.user._id;
+    const { isbn } = req.params;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+    
+    try {
+        var reviews = await Review.find({ isbn: isbn }).sort({created_at: -1})
+
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
+
 // 추천 감상평 조회
 router.get('/rec', auth, async(req, res) => {
     const userId = req.user._id;
@@ -137,6 +163,41 @@ router.get('/rec', auth, async(req, res) => {
         if(categoryId && categoryId.length) { 
             //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
             reviews = await Review.find({ category: { $in: categoryId }});
+            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        } 
+        
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
+
+// 추천 감상평 조회
+router.get('/rec/:isbn', auth, async(req, res) => {
+    const userId = req.user._id;
+    const { isbn } = req.params;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+
+    try{
+        const categoryId = await UserCategory.find({ userId })
+            .then(result => result.map(item => item.categoryId))
+
+        var reviews = [];
+
+        if(categoryId && categoryId.length) { 
+            //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
+            reviews = await Review.find({ isbn: isbn, category: { $in: categoryId }});
             reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         } 
         

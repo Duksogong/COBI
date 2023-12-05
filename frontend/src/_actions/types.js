@@ -6,7 +6,6 @@ export const CHANGE_NICKNAME = "change_nickname";
 
 export const SEARCH_BOOK_TITLE = "search_book_title";
 export const SEARCH_BOOK_ISBN = "search_book_isbn";
-export const SEARCH_REVIEW = "search_review";
 
 export const CHANGE_PASSWORD = "change_password";
 
@@ -22,4 +21,6 @@ export const DELETE_REVIEW = "delete_review";
 export const UPDATE_REVIEW = "update_review";
 export const GET_REVIEW = "get_review";
 export const GET_FEED = "get_feed";
-export const GET_REC = "get_rec"
+export const GET_REC = "get_rec";
+export const GET_FEED_ISBN = "get_feed_isbn";
+export const GET_REC_ISBN = "get_rec_isbn";

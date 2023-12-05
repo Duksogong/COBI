@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { searchBookISBN, searchReview } from '../../../_actions/search_action';
+import axios from 'axios';
+
+import { searchBookISBN } from '../../../_actions/search_action';
 import { findUser } from '../../../_actions/user_action';
-import { getFeed, getRec } from '../../../_actions/review_action';
+import { getFeedIsbn, getRecIsbn } from '../../../_actions/review_action';
 
 import { FaRegCommentDots } from "react-icons/fa";
 
@@ -23,10 +25,11 @@ function SearchPage() {
   const dispatch = useDispatch();
 
   const { isbn } = useParams()
-  const currentUser = useSelector(state => state.user.success._id)
+  const currentUserId = useSelector(state => state.user.success._id)
 
   const [book, setBook] = useState("")
   const [reviews, setReviews] = useState([])
+  const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState({})
 
   const [radioValue, setRadioValue] = useState('feed')
@@ -49,68 +52,79 @@ function SearchPage() {
       })
 
     //감상평 가져오기
-    dispatch(searchReview(body))
+    dispatch(getFeedIsbn(isbn))
       .then(response => {
         if(response.payload.success) {
-          setReviews(response.payload.result)
+          setReviews(response.payload.reviews)
         }
       })
+    
+    //카테고리를 가져오기
+    axios.get('/api/users/categories')
+      .then(response => setCategories(response.data))
+      .catch(err => console.error(err))
   }, [isbn])
-
-  useEffect(() => {
-    //각 리뷰에 대한 사용자 정보 상태 저장
-    const fetchAuthors = async () => {
-      const authorDetails = {};
-
-      // Promise.all을 사용하여 비동기 작업을 병렬로 처리
-      await Promise.all(reviews.map(async (review) => {
-        const userId = review.user;
-        const user = await fetchUserDetail(userId);
-        authorDetails[userId] = user;
-      }));
-
-      setAuthors(authorDetails)
-    }
-
-    fetchAuthors()
-  }, [reviews])
 
   useEffect(() => {
     //감상평 목록 출력
     if(radioValue === 'feed') {
-      dispatch(getFeed())
+      dispatch(getFeedIsbn(isbn))
         .then(response => {
           if(response.payload.success) {
             setReviews(response.payload.reviews)
           }
         })
     } else if (radioValue === 'rec') {
-      dispatch(getRec())
+      dispatch(getRecIsbn(isbn))
         .then(response => {
           if(response.payload.success) {
             setReviews(response.payload.reviews)
           }
         })
     }
-  }, [reviews, authors, radioValue])
+  }, [radioValue])
 
-  //사용자 정보 불러오기
-  const fetchUserDetail  = async (userId) => {
-    try {
-      const response = await dispatch(findUser(userId))
-      if(response.payload.success) {
-        return response.payload.result
-      } else {
-        return { nickname: "unknown" }
+  useEffect(() => {
+    //각 감상평에 대한 사용자 정보 저장
+    const fetch = async () => {
+      const authorDetails = {}
+
+      //사용자 정보 불러오기
+      const fetchUserDetail = async (userId) => {
+        try {
+          const response = await dispatch(findUser(userId))
+          if(response.payload.success) {
+            return response.payload.result
+          } else {
+            return { nickname: "unknown" }
+          }
+        } catch (err) {
+          return { nickname: "unknown" }
+        }
       }
-    } catch {
-      return { nickname: "unknown" }
+
+      //Promise.all을 사용하여 비동기 작업을 병렬로 처리
+      await Promise.all(reviews.map(async (review) => {
+        const userId = review.user
+        const categoryId = review.category
+        if(!authors[userId]) {
+          const user = await fetchUserDetail(userId)
+          authorDetails[userId] = user
+        }
+      }))
+      setAuthors((prevAuthors) => ({ ...prevAuthors, ...authorDetails }))
     }
+    fetch()
+  }, [reviews])
+
+  //댓글 이벤트 처리
+  const onCommentHandler = (reviewId) => {
+    alert(`감상평: ${reviewId}에 대한 댓글 작성중...`)
   }
 
   //클릭 이벤트 처리
   const handleCarouselItemClick = (reviewId) => {
-    navigate(`/review_detail/${reviewId}/${currentUser}`);
+    navigate(`/review_detail/${reviewId}/${currentUserId}`);
   };
 
   return(
@@ -120,7 +134,7 @@ function SearchPage() {
       <div className="d-flex flex-column align-items-center flex-grow-1"
         style={{justifyContent: 'space-evenly'}}>
 
-        <Card>
+        <Card style={{width:'280px', margin:'15px'}}>
           <Container>
             <Row>
               <Col xs={2} className="d-flex align-items-center justify-content-center">
@@ -142,48 +156,57 @@ function SearchPage() {
       
         <Carousel pause="hover" indicators={false} data-bs-theme="dark"
         style={{width:'310px'}}>
-          {reviews.map((review) => (
+          {reviews.length === 0 && (
+            <p style={{ height:'30rem', lineHeight:'30rem', textAlign:'center' }}>
+              감상평이 없습니다.
+            </p>
+          )}
+
+          {reviews.length > 0 && reviews.map((review) => (
             <Carousel.Item key={review._id}>
-              <Card onClick={() => handleCarouselItemClick(review._id)} bg="light" text="dark"
-              style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)', margin:'10px', height: '30rem' }}>
-                  <Card.Header
-                  style={{ borderBottom:'solid 1px #dcdcdc', display:'flex' }}>
-                      <Card.Img style={{ width:"40px", height:"40px", borderRadius: "50%", objectFit: "cover" }}
-                          src="http://dummyimage.com/50x50/ced4da/6c757d.jpg"
-                          alt="Image Alt Text">
-                      </Card.Img>
-                      <div style={{ flexDirection:'column', marginLeft:'10px' }}>
-                          <p style={{ margin:'0px' }}>
-                            {authors[review.user] ? authors[review.user].nickname : "unknown"}
-                          </p>
-                          <p style={{ margin:'0px', fontSize:'12px'}}>
-                            {new Date(review.created_at).toLocaleString('ko-KR', {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                            })}
-                          </p>
-                      </div>
-                  </Card.Header>
-                  <Card.Body>
-                      <Card.Img style={{ width:'144px', height: '96px' }}
-                          src="http://dummyimage.com/128x96/ced4da/6c757d.jpg"
-                          alt="Image Alt Text">
-                      </Card.Img>
-                      <div style={{ marginTop:'10px' }}>
-                          <Card.Title>{review?.title ? review?.title : 'untitled'}</Card.Title>
-                          <Card.Text>{review.review.length > 150 ? (<>{`${review.review.slice(0, 150)}... `}<br />더보기</>) : review.review}</Card.Text>
-                      </div>
-                  </Card.Body>
-                  <Card.Footer 
-                  style={{ borderTop:'solid 1px #dcdcdc' }}>
-                      <FaRegCommentDots />
-                  </Card.Footer>
+            <Card bg="light" text="dark"
+            style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)', margin:'10px', height: '30rem' }}>
+                <Card.Header
+                style={{ borderBottom:'solid 1px #dcdcdc', display:'flex' }}>
+                    <Card.Img style={{ width:"40px", height:"40px", borderRadius: "50%", objectFit: "cover" }}
+                        src="http://dummyimage.com/50x50/ced4da/6c757d.jpg"
+                        alt="Image Alt Text">
+                    </Card.Img>
+                    <div style={{ flexDirection:'column', marginLeft:'10px' }}>
+                        <p style={{ margin:'0px' }}>
+                          {authors[review.user] ? authors[review.user].nickname : "unknown"}
+                        </p>
+                        <p style={{ margin:'0px', fontSize:'12px'}}>
+                          {new Date(review.created_at).toLocaleString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                          })}
+                        </p>
+                    </div>
+                </Card.Header>
+                <Card.Body onClick={() => handleCarouselItemClick(review._id, currentUserId)}>
+                    <Card.Img style={{ width:'144px', height: '96px' }}
+                        src="http://dummyimage.com/128x96/ced4da/6c757d.jpg"
+                        alt="Image Alt Text">
+                    </Card.Img>
+                    <div style={{ marginTop:'10px' }}>
+                        <Card.Title>{review?.title ? review?.title : 'untitled'}</Card.Title>
+                        <Card.Text>{review.review.length > 150 ? (<>{`${review.review.slice(0, 150)}... `}<br />더보기</>) : review.review}</Card.Text>
+                    </div>
+                </Card.Body>
+                <Card.Footer 
+                style={{ borderTop:'solid 1px #dcdcdc', position: 'relative' }}>
+                    <FaRegCommentDots onClick={() => onCommentHandler(review._id)} />
+                    <span className='text-muted' style={{ fontSize:'12px', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                      카테고리: {categories.find(category => category._id === review.category)?.name || '기타'}
+                    </span>
+                </Card.Footer>
               </Card>
-          </Carousel.Item>
+            </Carousel.Item>
           ))}
         </Carousel>
         <ButtonGroup>
