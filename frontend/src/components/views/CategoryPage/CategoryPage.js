@@ -152,8 +152,28 @@ function CategoryPage() {
         return "역사";
       case '65538e14cca6a7a4cd35b550':
         return "종교";
-      case '65538e1dcca6a7a4cd35b551':
+      case '656f8d97c27e8e4307583e7a':
         return "예술/대중문화";
+      case '656f8d0ac27e8e4307583e71':
+        return "자연/과학";
+      case '656f8d26c27e8e4307583e72':
+        return "유아";
+      case '656f8d35c27e8e4307583e73':
+        return "어린이";
+      case '656f8d3fc27e8e4307583e74':
+        return "여행";
+      case '656f8d4cc27e8e4307583e75':
+        return "국어/외국어";
+      case '656f8d5bc27e8e4307583e76':
+        return "컴퓨터/IT";
+      case '656f8d6ac27e8e4307583e77':
+        return "청소년";
+      case '656f8d76c27e8e4307583e78':
+        return "수험서/자격증";
+      case '656f8d8cc27e8e4307583e79':
+        return "만화";
+      case '65538e14cca6a7a4cd35b550':
+        return "잡지";
       default:
         return "기타";
     }

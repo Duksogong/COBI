@@ -25,7 +25,11 @@ function HomePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  const currentUserId = useSelector(state => state.user.success._id)
+  let currentUserId = ''//useSelector(state => state.user.success._id)
+
+  const [cookie, setCookie] = useState("");
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
 
   const [advice, setAdvice] = useState("");
 
@@ -41,6 +45,11 @@ function HomePage() {
 
   //초기 설정
   useEffect(() => {  
+    // 현재 브라우저 쿠키에서 값(토큰) 가져오기
+    const sample = document.cookie.split('=');
+    const cookies = sample[1].split(';');
+    setCookie(cookies[0]);
+    
     //렌더 시, 랜덤 명언 설정
     setAdvice(kadvice.getOne());
 
@@ -57,6 +66,24 @@ function HomePage() {
         }
       })
   }, [])
+
+  // 쿠키관련
+  useEffect(() => {
+    // 서버에서 유저 데이터를 가져오기
+    axios.get('/api/users')
+      .then(response => setUsers(response.data))
+      .catch(error => console.error(error));
+  }, []);
+  useEffect(() => {
+    // users 리스트에서 cookie값을 token으로 가진 유저 찾기 (로그인 상태 유저 찾기)
+    for (let i=0; i<users.length; i++) {
+      if (users[i].token === cookie){
+        setCurrentUser(users[i]);
+        currentUserId = currentUser._id;
+        break;
+      }
+    }
+  }, [cookie, users]);
 
   //피드/추천 버튼 클릭 시,
   useEffect(() => {

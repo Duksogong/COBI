@@ -55,6 +55,10 @@ const { auth } = require("./middleware/auth");
 const { Comment } = require("./models/Comment");
 //const { Reply } = require("./models/Reply");
 
+
+
+
+
 app.use(router);
 
 app.get("/", (req, res) => {
