@@ -25,7 +25,7 @@ function HomePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  let currentUserId = ''//useSelector(state => state.user.success._id)
+  let currentUserId = []//useSelector(state => state.user.success._id)
 
   const [cookie, setCookie] = useState("");
   const [users, setUsers] = useState([]);
@@ -80,6 +80,7 @@ function HomePage() {
       if (users[i].token === cookie){
         setCurrentUser(users[i]);
         currentUserId = currentUser._id;
+        console.log('금쪽이', currentUser._id)
         break;
       }
     }
@@ -214,7 +215,7 @@ function HomePage() {
                         </p>
                     </div>
                 </Card.Header>
-                <Card.Body onClick={() => handleCarouselItemClick(review._id, currentUserId)}>
+                <Card.Body onClick={() => handleCarouselItemClick(review._id, currentUser._id)}>
                     <div>
                                             <Card.Title>
                                                 {review?.title
