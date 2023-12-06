@@ -167,7 +167,8 @@ function MyBookmarkPage() {
                   <div>
                     <img style={{width:"50px", height:"70px", marginRight:'10px',
                       borderRadius: "10%", objectFit: "cover",}}
-                      src="http://dummyimage.com/50x70/ced4da/6c757d.jpg"
+                      // src="http://dummyimage.com/50x70/ced4da/6c757d.jpg"
+                      src={reviewO?.bookimage}
                       alt="Image Alt Text"/>
                   </div>
                   <div style={{width: '260px', fontSize:'16px', 
