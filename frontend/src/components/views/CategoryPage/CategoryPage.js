@@ -18,7 +18,7 @@ function CategoryPage() {
 
   const [cookie, setCookie] = useState("");
   const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState([]);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -30,8 +30,9 @@ function CategoryPage() {
 
   useEffect(() => {
     // 현재 브라우저 쿠키에서 값(토큰) 가져오기
-    const cookies = document.cookie.split('=');
-    setCookie(cookies[1]);
+    const sample = document.cookie.split('=');
+    const cookies = sample[1].split(';');
+    setCookie(cookies[0]);
   }, []);
 
   /* 현재 브라우저 쿠키값(토큰) 확인 */
@@ -62,7 +63,7 @@ function CategoryPage() {
   }, [cookie, users]);
 
   /* 토큰 값으로 찾은 User의 유저 _id */
-  console.log("최종 유저: ", currentUser._id);
+  console.log("최종 유저: ", currentUser);
 
   useEffect(() => {
     // 서버에서 유저카테고리 데이터를 가져오기

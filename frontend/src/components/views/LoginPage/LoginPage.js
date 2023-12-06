@@ -19,7 +19,7 @@ function LoginPage() {
   }
   const onSubmitHandler = (event) => {
     event.preventDefault();
-
+    console.log('dslfksdlfksdjf')
     let body = {
       email: Email,
       password: Password
