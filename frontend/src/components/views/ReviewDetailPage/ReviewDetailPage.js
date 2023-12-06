@@ -244,6 +244,7 @@ function ReviewDetailPage() {
                             display: "flex",
                             justifyContent: "space-around",
                             flexDirection: "column",
+                            marginBottom: "40px",
                         }}
                     >
                         <h4>{detail?.title}</h4>
