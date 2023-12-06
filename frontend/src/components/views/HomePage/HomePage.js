@@ -44,7 +44,6 @@ function HomePage() {
     const sample = document.cookie.split('=');
     const cookies = sample[1].split(';');
     setCookie(cookies[0]);
-  }, []);
   
     //렌더 시, 랜덤 명언 설정
     setAdvice(kadvice.getOne());
