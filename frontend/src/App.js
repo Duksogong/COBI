@@ -50,7 +50,7 @@ function App() {
         <Route path="/change_category" element={<ChangeCategoryPage />} />
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
         <Route path="/post_review" element={<PostReviewPage />} />
-        <Route path="/review_detail/:reviewId/:currentUser" element={<ReviewDetailPage />} />
+        <Route path="/review_detail/:reviewId/:userId" element={<ReviewDetailPage />} />
         <Route path="/comments" element={<CommentPage />}>
           <Route index element={<CommentList />} />
         </Route>

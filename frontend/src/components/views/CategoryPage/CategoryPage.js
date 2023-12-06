@@ -21,7 +21,7 @@ function CategoryPage() {
   const [currentUser, setCurrentUser] = useState([]);
 
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('65538dc8cca6a7a4cd35b548');
   const [selectedUserCategories, setSelectedUserCategories] = useState([]);
 
 
