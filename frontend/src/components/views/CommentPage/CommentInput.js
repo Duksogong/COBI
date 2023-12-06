@@ -17,7 +17,7 @@ const CommentInput = ({ onPostComment }) => {
 
     return (
         <InputBox>
-            <textarea
+            <Textarea
                 value={commentInput}
                 onChange={(e) => setCommentInput(e.target.value)}
                 placeholder="댓글을 작성하여 주세요"
@@ -31,12 +31,17 @@ export default CommentInput;
 const InputBox = styled.div`
     display: flex;
 `;
+const Textarea = styled.textarea`
+    border: solid #a9b388;
+    border-radius: 10px;
+    width: 80%;
+    height: 50px;
+`;
 const Button = styled.button`
     width: 20%;
     background-color: #a9b388;
     border: none;
     border-radius: 10px;
-    margin: 30px;
     height: 50px;
     color: #fff;
 `;
