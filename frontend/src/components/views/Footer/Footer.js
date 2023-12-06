@@ -22,7 +22,7 @@ function Footer() {
         </Link>
       </div>
       <div>
-        <Link to="#" className="nav-link" onClick={() => setActiveNav(2)}>
+        <Link to="/my_review" className="nav-link" onClick={() => setActiveNav(2)}>
           <div style={activeNav === 2 ? {color: '#5F6F52'} : {}}>
             <div><IoBookOutline /></div>
             <div>내감상평</div>
@@ -38,7 +38,7 @@ function Footer() {
         </Link>
       </div>
       <div>
-        <Link to="post_review" className="nav-link" onClick={() => setActiveNav(4)}>
+        <Link to="/post_review" className="nav-link" onClick={() => setActiveNav(4)}>
           <div style={activeNav === 4 ? {color: '#5F6F52'} : {}}>
             <div><LuPencilLine /></div>
             <div>글쓰기</div>

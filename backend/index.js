@@ -2,11 +2,14 @@ const express = require("express");
 const app = express();
 const port = 5000;
 const config = require("./config/key");
+const cors = require("cors");
+const router = express.Router();
 
-//bodyParser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
+
 
 //cookieParser
 const cookieParser = require("cookie-parser");
@@ -14,20 +17,29 @@ app.use(cookieParser());
 
 //mongoose 연결
 const mongoose = require("mongoose");
-mongoose
-    .connect(config.mongoURI)
-    .then(() => console.log("MongoDB Connected..."))
-    .catch((err) => console.log(err));
 
-//router 마운트
-const searchRoutes = require("./routes/searchRoutes");
-app.use("/api/search", searchRoutes);
+mongoose
+    .connect(config.mongoURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("MongoDB 연결됨..."))
+    .catch((err) => console.log(err));
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
 
-const reviewRoutes = require("./routes/reviewRoutes");
-app.use("/api/review", reviewRoutes);
+const searchRoutes = require("./routes/searchRoutes");
+app.use("/api/search", searchRoutes);
+
+const commentRoutes = require("./routes/commentRoutes"); 
+app.use("/api/comments", commentRoutes); 
+
+const categoryRoutes = require("./routes/categoryRoutes");
+app.use("/api/users", categoryRoutes);
+
+const bookmarkRoutes = require("./routes/bookmarkRoutes");
+app.use("/api/users", bookmarkRoutes);
 
 const commentRoutes = require("./routes/commentRoutes"); 
 app.use("/api/comments", commentRoutes); 
@@ -38,16 +50,12 @@ app.listen(port, () => {
 });
 
 const { User } = require("./models/User");
-const { UserCategory } = require("./models/UserCategory");
-const { Bookmark } = require("./models/Bookmark");
-const { Category } = require("./models/Category");
-const { Review } = require("./models/Review");
-
 const { auth } = require("./middleware/auth");
+
 const { Comment } = require("./models/Comment");
 //const { Reply } = require("./models/Reply");
 
-//===============================================================================
+app.use(router);
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -150,6 +158,7 @@ app.post("/api/users/reset_nickname", auth, (req, res) => {
 
     });
 
+
 app.get("/api/users/auth", auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
@@ -164,14 +173,14 @@ app.get("/api/users/auth", auth, (req, res) => {
 
 app.get("/api/users/logout", auth, (req, res) => {
     User.findOneAndUpdate({ _id: req.user._id }, { token: "" })
-        .then(() => {
-            res.status(200).send({
-                success: true,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json({ success: false, error: err.message });
+    .then(() => {
+        res.status(200).send({
+            success: true,
         });
+    })
+    .catch((err) => {
+        res.status(500).json({ success: false, error: err.message });
+    });
 });
 
 app.post("/api/users/reset_password", auth, (req, res) => {
@@ -253,62 +262,33 @@ app.post("/api/users/reset_password", auth, (req, res) => {
 
 app.post("/api/users/reset_nickname", auth, (req, res) => {
     //const user = new User(req.body)
-    const newNickname = req.body.newNickname;
-
-    // 현재 사용자의 닉네임을 업데이트
-    User.findOneAndUpdate(
-        { _id: req.user._id },
-        { nickname: newNickname },
-        { new: true } // 업데이트된 문서를 반환하도록 설정
-    )
-        .then((updatedUser) => {
-            if (!updatedUser) {
-                return res.json({
+        const newNickname = req.body.newNickname;
+    
+        // 현재 사용자의 닉네임을 업데이트
+        User.findOneAndUpdate(
+            { _id: req.user._id },
+            { nickname: newNickname },
+            { new: true } // 업데이트된 문서를 반환하도록 설정
+        )
+            .then((updatedUser) => {
+                if (!updatedUser) {
+                    return res.json({
+                        success: false,
+                        message: "닉네임 변경 실패",
+                    });
+                }
+                res.status(200).json({
+                    success: true,
+                    message: "닉네임 변경 성공",
+                });
+            })
+            .catch((err) => {
+                res.json({
                     success: false,
                     message: "닉네임 변경 실패",
+                    error: err,
                 });
-            }
-            res.status(200).json({
-                success: true,
-                message: "닉네임 변경 성공",
             });
-        })
-        .catch((err) => {
-            res.json({
-                success: false,
-                message: "닉네임 변경 실패",
-                error: err,
-            });
-        });
-});
-
-app.get("/api/users/categories", (req, res) => {
-    Category.find({})
-        .then((categories) => {
-            res.json(categories);
-        })
-        .catch((err) => {
-            res.status(500).send(err);
-        });
-});
-
-app.get("/api/users/user_categories", (req, res) => {
-    UserCategory.find({})
-        .then((user_categories) => {
-            res.json(user_categories);
-        })
-        .catch((err) => {
-            res.status(500).send(err);
-        });
-});
-
-
-app.post("/api/users/select_category", auth, (req, res) => {
-    const { userId, categoryId } = req.body;
-
-    const userCategory = new UserCategory({
-        userId: userId,
-        categoryId: categoryId,
     });
 
     userCategory
@@ -410,7 +390,6 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
             });
         });
 });
-
 
 
 
