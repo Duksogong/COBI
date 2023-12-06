@@ -32,8 +32,8 @@ app.use("/api/users", userRoutes);
 const searchRoutes = require("./routes/searchRoutes");
 app.use("/api/search", searchRoutes);
 
-const commentRoutes = require("./routes/commentRoutes"); 
-app.use("/api/comments", commentRoutes); 
+const reviewRoutes = require("./routes/reviewRoutes");
+app.use("/api/review", reviewRoutes);
 
 const categoryRoutes = require("./routes/categoryRoutes");
 app.use("/api/users", categoryRoutes);
@@ -54,6 +54,10 @@ const { auth } = require("./middleware/auth");
 
 const { Comment } = require("./models/Comment");
 //const { Reply } = require("./models/Reply");
+
+
+
+
 
 app.use(router);
 
@@ -125,39 +129,6 @@ app.post("/api/users/login", (req, res) => {
             return res.status(400).send(err);
         })
     })
-
-app.post("/api/users/reset_nickname", auth, (req, res) => {
-    //const user = new User(req.body)
-        const newNickname = req.body.newNickname;
-    
-        // 현재 사용자의 닉네임을 업데이트
-        User.findOneAndUpdate(
-            { _id: req.user._id },
-            { nickname: newNickname },
-            { new: true } // 업데이트된 문서를 반환하도록 설정
-        )
-        .then((updatedUser) => {
-            if (!updatedUser) {
-                return res.json({
-                    success: false,
-                    message: "닉네임 변경 실패",
-                });
-            }
-            res.status(200).json({
-                success: true,
-                message: "닉네임 변경 성공",
-            });
-        })
-        .catch((err) => {
-            res.json({
-                success: false,
-                message: "닉네임 변경 실패",
-                error: err,
-            });
-        });
-
-    });
-
 
 app.get("/api/users/auth", auth, (req, res) => {
     res.status(200).json({
@@ -291,108 +262,28 @@ app.post("/api/users/reset_nickname", auth, (req, res) => {
             });
     });
 
-    userCategory
-        .save()
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: "Category selected successfully.",
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).json({
-                success: false,
-                message: "Internal server error.",
-            });
-        });
-});
+app.post("/api/comments", (req, res) => {
+    const { author, content } = req.body;
 
-app.post("/api/users/deselect_category", auth, (req, res) => {
-    const { userId, categoryId } = req.body;
-
-    UserCategory.findOneAndDelete({ userId: userId, categoryId: categoryId })
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: "Category deselected successfully.",
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).json({
-                success: false,
-                message: "Internal server error.",
-            });
-        });
-});
-
-app.get("/api/users/review", (req, res) => {
-    Review.find({})
-        .then((reviews) => {
-            res.json(reviews);
-        })
-        .catch((err) => {
-            res.status(500).send(err);
-        });
-});
-
-app.get("/api/users/bookmark", (req, res) => {
-    Bookmark.find({})
-        .then((bookmarks) => {
-            res.json(bookmarks);
-        })
-        .catch((err) => {
-            res.status(500).send(err);
-        });
-});
-
-app.post("/api/users/select_bookmark", auth, (req, res) => {
-    const { userId, reviewId } = req.body;
-
-    const bookmark = new Bookmark({
-        userId: userId,
-        reviewId: reviewId,
+    const newComment = new Comment({
+        author,
+        content,
+        timestamp: new Date().toISOString(),
     });
 
-    bookmark
+    newComment
         .save()
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: "Bookmark selected successfully.",
-            });
+        .then((comment) => {
+            res.json({ success: true, comment });
         })
         .catch((error) => {
             console.error(error);
             res.status(500).json({
                 success: false,
-                message: "Internal server error.",
+                message: "내부 서버 오류.",
             });
         });
 });
-
-app.post("/api/users/deselect_bookmark", auth, (req, res) => {
-    const { userId, reviewId } = req.body;
-
-    Bookmark.findOneAndDelete({ userId: userId, reviewId: reviewId })
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: "Bookmark deselected successfully.",
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).json({
-                success: false,
-                message: "Internal server error.",
-            });
-        });
-});
-
-
-
 
 // router.post("/api.comments/:commentId/replies", (req, res) => {
 //     const { commentId } = req.params;
@@ -436,4 +327,3 @@ app.post("/api/users/deselect_bookmark", auth, (req, res) => {
 // });
 //
 // module.exports = router;
-
