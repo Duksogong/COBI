@@ -431,7 +431,7 @@ const SearchResultsContainer = styled.div`
     right: 0;
     top: 100%;
     z-index: 99;
-    max-height: 450px; /* 원하는 최대 높이 설정 */
+    max-height: 550px; /* 원하는 최대 높이 설정 */
     overflow-y: auto; /* 세로 스크롤 활성화 */
     ul {
         list-style: none;
@@ -459,7 +459,7 @@ const Button = styled.button`
     border: none;
     border-radius: 40px;
     font-size: 20px;
-    margin: 20px;
+    margin: 30px;
     height: 50px;
     color: #fff;
 `;
