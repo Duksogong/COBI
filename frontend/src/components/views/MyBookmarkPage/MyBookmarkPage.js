@@ -90,18 +90,18 @@ function MyBookmarkPage() {
 
   const onOptionDate = () => {
     setOption("최신순")
-    //setReviews([...reviews].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+    setDetails([...details].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
   }
 
   const onOptionDictionary = () => {
     setOption("사전순")
-    // setReviews([...reviews].sort((a, b) => {
-    //   const titleA = a.title || ""; // null 또는 undefined인 경우 빈 문자열로 대체
-    //   const titleB = b.title || ""; // null 또는 undefined인 경우 빈 문자열로 대체
+    setDetails([...details].sort((a, b) => {
+      const titleA = a.title || ""; // null 또는 undefined인 경우 빈 문자열로 대체
+      const titleB = b.title || ""; // null 또는 undefined인 경우 빈 문자열로 대체
   
-    //   // 비교 함수를 통해 정렬, null 또는 undefined인 경우를 고려하여 처리
-    //   return titleA.localeCompare(titleB);
-    // }))
+      // 비교 함수를 통해 정렬, null 또는 undefined인 경우를 고려하여 처리
+      return titleA.localeCompare(titleB);
+    }))
   }
 
   const handleReviewClick = (reviewId, currentUser) => {
