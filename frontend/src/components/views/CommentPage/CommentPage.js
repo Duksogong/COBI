@@ -26,7 +26,7 @@ const CommentPage = () => {
     fetchComments();
   }, []);
 
-  // ... (이전 코드)
+
 
 const handleCommentSubmit = async (commentData) => {
   try {
@@ -40,7 +40,6 @@ const handleCommentSubmit = async (commentData) => {
   }
 };
 
-// ... (이전 코드)
 
 
   return (

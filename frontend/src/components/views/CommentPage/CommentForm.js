@@ -1,43 +1,66 @@
-// CommentForm.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import CommentForm from './CommentForm';
+import CommentList from './CommentList';
+import NavBar from '../NavBar/NavBar';
+import Footer from '../Footer/Footer';
 
-import React, { useState } from 'react';
+const CommentPage = () => {
+  const [comments, setComments] = useState([]);
+  const reviewId = '656f5ea14fcf790ca7513db2'; // 특정 리뷰의 ObjectId
 
-const CommentForm = ({ onCommentSubmit }) => {
-  const [commentContent, setCommentContent] = useState('');
-
-  const handleInputChange = (e) => {
-    setCommentContent(e.target.value);
+  const fetchComments = async () => {
+    try {
+      // 서버에서 특정 리뷰에 대한 댓글 목록 가져오기
+      const response = await axios.get(`/api/comments/${reviewId}`);
+      setComments(response.data.comments);
+    } catch (error) {
+      console.error('댓글 가져오기 오류:', error);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    // 페이지가 로드될 때 특정 리뷰에 대한 댓글을 가져옴
+    fetchComments();
+  }, []);
 
-    // 댓글을 제출하기 전에 작성자와 내용이 제공되었는지 확인합니다.
-    const author = 'CurrentUser'; // 실제 사용자 정보로 교체
-    const reviewId = '656f5ea14fcf790ca7513db2'; // 실제 리뷰 ID로 교체
+  const handleCommentSubmit = async (commentData) => {
+    try {
+      // 서버에 댓글 전송
+      await axios.post('/api/comments', { ...commentData, reviewId });
 
-    if (!author || !commentContent) {
-      console.error('작성자와 내용은 필수입니다.');
-      return;
+      // 서버에서 최신 댓글 목록을 다시 가져옴
+      fetchComments();
+    } catch (error) {
+      console.error('댓글 작성 오류:', error);
     }
+  };
 
-    // 댓글 데이터를 부모 컴포넌트에 전달하여 제출합니다.
-    onCommentSubmit({ author, content: commentContent, reviewId });
-
-    // 댓글 입력 필드를 재설정합니다.
-    setCommentContent('');
+  const buttonStyle = {
+    width: '100%',
+    padding: '10px',
+    backgroundColor: '#a9b388',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
-        value={commentContent}
-        onChange={handleInputChange}
-        placeholder="댓글을 입력하세요..."
-      />
-      <button type="submit">댓글 작성</button>
-    </form>
+    <div className="d-flex flex-column" style={{ height: '100vh' }}>
+      <NavBar />
+      <CommentForm onCommentSubmit={handleCommentSubmit} />
+      <div
+        className="d-flex flex-column align-items-center flex-grow-1"
+        style={{ justifyContent: 'space-evenly' }}
+      >
+        <CommentList comments={comments} />
+        <button type="submit" style={buttonStyle}>
+          댓글 작성
+        </button>
+      </div>
+      <Footer className="fixed-footer" />
+    </div>
   );
 };
 
-export default CommentForm;
+export default CommentPage;
