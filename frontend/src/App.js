@@ -26,9 +26,6 @@ import MyReviewPage from "./components/views/MyReivewPage/MyReviewPage";
 import ReviewDetailPage from "./components/views/ReviewDetailPage/ReviewDetailPage";
 import PostReviewPage from "./components/views/PostReviewPage/PostReviewPage";
 
-import CommentList from "./components/views/CommentPage/CommentList";
-import CommentForm from "./components/views/CommentPage/CommentForm";
-import CommentPage from "./components/views/CommentPage/CommentPage"; 
 
 function App() {
   return (
@@ -51,10 +48,7 @@ function App() {
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
         <Route path="/post_review" element={<PostReviewPage />} />
         <Route path="/review_detail/:reviewId/:userId" element={<ReviewDetailPage />} />
-        <Route path="/comments" element={<CommentPage />}>
-          <Route index element={<CommentList />} />
-        </Route>
-        <Route path="/post_comment" element={<CommentForm />} /> 
+        
         <Route path="/my_review" element={<MyReviewPage />} />
         <Route path="/post_review" element={<PostReviewPage />} />
       </Routes>
