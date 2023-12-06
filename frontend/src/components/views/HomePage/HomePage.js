@@ -39,12 +39,7 @@ function HomePage() {
   ];
 
   //초기 설정
-  useEffect(() => {
-    // 현재 브라우저 쿠키에서 값(토큰) 가져오기
-    const sample = document.cookie.split('=');
-    const cookies = sample[1].split(';');
-    setCookie(cookies[0]);
-  
+  useEffect(() => {  
     //렌더 시, 랜덤 명언 설정
     setAdvice(kadvice.getOne());
 
