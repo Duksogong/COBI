@@ -27,7 +27,7 @@ function ReviewDetailPage() {
 
     // useParams 훅을 사용하여 reviewId 추출
     const { reviewId } = useParams();
-    const { currentUser } = useParams();
+    const { userId } = useParams();
 
     // 유저 데이터를 가져오기
     useEffect(() => {
@@ -67,11 +67,11 @@ function ReviewDetailPage() {
     // 북마크 유저것만 골라내기
     useEffect(() => {
         const filteredBookmarks = bookmarks.filter(
-            (bm) => bm.userId === currentUser
+            (bm) => bm.userId === userId
         );
         const selectedReviewIds = filteredBookmarks.map((bm) => bm);
         setSelectedBookmarks(selectedReviewIds);
-    }, [bookmarks, currentUser]);
+    }, [bookmarks, userId]);
 
     useEffect(() => {
         // 선택된 북마크가 있을 때와 없을 때에 따라 아이콘 변경
@@ -84,10 +84,11 @@ function ReviewDetailPage() {
         );
         setBookmarkIcon(icon);
     }, [selectedBookmarks, reviewId]);
+    console.log("금쪽이", userId)
 
     const onSetBookmark = () => {
         let body = {
-            userId: currentUser,
+            userId: userId,
             reviewId: detail._id,
         };
 

@@ -226,11 +226,11 @@ function HomePage() {
                                                 imageIds={review?.images}
                                             />
                                             <Card.Text>
-                                                {review.review.length > 150 ? (
+                                                {review.review.length > 130 ? (
                                                     <>
                                                         {`${review.review.slice(
                                                             0,
-                                                            150
+                                                            130
                                                         )}... `}
                                                         <br />
                                                         더보기
