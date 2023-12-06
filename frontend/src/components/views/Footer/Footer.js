@@ -12,7 +12,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 function Footer() {
   const [activeNav, setActiveNav] = useState(1);
   return (
-    <nav style={{paddig: '8px 0px'}}>
+    <nav style={{padding: '8px 0px'}}>
       <div>
         <Link to="/home" className="nav-link" onClick={() => setActiveNav(1)}>
           <div style={activeNav === 1 ? {color: '#5F6F52'} : {}}>

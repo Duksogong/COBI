@@ -9,6 +9,7 @@
 nav {
     overflow: hidden;
     border-top: 2px solid grey;
+    background-color: #fff;
 }
 
 nav > div {
@@ -16,9 +17,7 @@ nav > div {
     float: left;
     width: 20%;
     text-align: center;
-  
     /* 세로길이 설정 */
     /* height: 45px;
     line-height: 45px; */
 }
-  

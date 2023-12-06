@@ -10,6 +10,9 @@ import Card from "react-bootstrap/Card";
 import { FaRegCommentDots } from "react-icons/fa6";
 import { HiMiniBookmark, HiOutlineBookmark } from "react-icons/hi2";
 import ReviewImagesComponent from "./ReviewImagesComponent";
+import CommentList from "../CommentPage/CommentList";
+import CommentInput from "../CommentPage/CommentInput";
+import styled from "styled-components";
 
 function ReviewDetailPage() {
     //const navigate = useNavigate();
@@ -20,7 +23,9 @@ function ReviewDetailPage() {
 
     const [bookmarks, setBookmarks] = useState([]);
     const [selectedBookmarks, setSelectedBookmarks] = useState([]);
-
+    const [showComments, setShowComments] = useState(false);
+    const [commentInput, setCommentInput] = useState("");
+    const [comments, setComments] = useState([]);
     const [bookmarkIcon, setBookmarkIcon] = useState(
         <HiOutlineBookmark fontSize="40px" />
     );
@@ -84,7 +89,8 @@ function ReviewDetailPage() {
         );
         setBookmarkIcon(icon);
     }, [selectedBookmarks, reviewId]);
-    console.log("금쪽이", userId)
+    console.log("금쪽이", userId);
+    console.log(users);
 
     const onSetBookmark = () => {
         let body = {
@@ -125,13 +131,47 @@ function ReviewDetailPage() {
         );
     };
     console.log(detail?.images);
+
+    const toggleComments = () => {
+        if (!showComments) {
+            axios
+                .get(`/api/comments/${reviewId}`)
+                .then((response) => {
+                    setComments(response.data.comments);
+                    setShowComments(true);
+                })
+                .catch((error) => console.error(error));
+        } else {
+            setShowComments(false);
+        }
+    };
+
+    const postComment = (newComment) => {
+        // You may need to adjust the API endpoint and request structure based on your server implementation
+        axios
+            .post("/api/comments", {
+                reviewId: reviewId,
+                content: newComment,
+                author: userId, // Update as needed
+            })
+            .then((response) => {
+                // Refresh the comment list after posting a new comment
+                toggleComments();
+            })
+            .catch((error) => console.error(error));
+    };
+
     return (
-        <div className="d-flex flex-column" style={{ height: "100vh" }}>
+        <div className="d-flex flex-column">
             <NavBar />
 
             <div
                 className="d-flex flex-column align-items-center flex-grow-1"
-                style={{ justifyContent: "space-evenly" }}
+                style={{
+                    justifyContent: "space-evenly",
+                    marginBottom: "20px",
+                    overflow: "auto",
+                }}
             >
                 <Card
                     bg="light"
@@ -225,10 +265,35 @@ function ReviewDetailPage() {
                             bottom: "10px",
                             left: "10px",
                         }}
+                        onClick={toggleComments}
                     />
+
+                    {showComments && (
+                        <Card
+                            bg="light"
+                            style={{
+                                posiiton: "relative",
+                                width: "310px",
+                                height: "30rem",
+                                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
+                                border: "none",
+                                marginBottom: "20px",
+                            }}
+                        >
+                            <Card.Body
+                                style={{
+                                    marginBottom: "50px",
+                                    width: "310px",
+                                    height: "100%",
+                                }}
+                            >
+                                <CommentList comments={comments} />
+                                <CommentInput onPostComment={postComment} />
+                            </Card.Body>
+                        </Card>
+                    )}
                 </Card>
             </div>
-
             <Footer />
         </div>
     );
