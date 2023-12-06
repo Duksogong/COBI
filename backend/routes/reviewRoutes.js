@@ -6,6 +6,7 @@ router.use(cookieParser());
 
 const { auth } = require("../middleware/auth");
 const { Review } = require("../models/Review");
+const { UserCategory } = require("../models/UserCategory");
 const { Image } = require("../models/Image");
 
 // 이미지 업로드를 위한 Multer 및 Memory Storage 설정
@@ -29,19 +30,34 @@ router.post("/", auth, upload.array("images", 3), async (req, res) => {
         const imageIds = [];
 
         // 업로드된 이미지를 순회하며 Image 문서 생성
-        for (const file of req.files) {
-            const image = new Image({
-                image: {
-                    data: file.buffer,
-                    contentType: file.mimetype,
-                },
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const image = new Image({
+                    image: {
+                        data: file.buffer,
+                        contentType: file.mimetype,
+                    },
+                });
+
+                // 이미지를 데이터베이스에 저장
+                const savedImage = await image.save();
+
+                // 이미지 ID를 배열에 추가
+                imageIds.push(savedImage._id);
+            }
+        } else {
+            const review = new Review({
+                ...req.body,
+                user: userId,
+                category,
             });
 
-            // 이미지를 데이터베이스에 저장
-            const savedImage = await image.save();
+            const reviewInfo = await review.save();
 
-            // 이미지 ID를 배열에 추가
-            imageIds.push(savedImage._id);
+            return res.status(200).json({
+                success: true,
+                review: reviewInfo,
+            });
         }
 
         const review = new Review({
@@ -89,6 +105,126 @@ router.get("/user", auth, async (req, res) => {
         });
     }
 });
+
+// 피드 감상평 조회
+router.get('/feed', auth, async (req, res) => {
+    const userId = req.user._id;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+    
+    try {
+        var reviews = await Review.find({}).sort({created_at: -1})
+
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
+
+// 피드 감상평 조회
+router.get('/feed/:isbn', auth, async (req, res) => {
+    const userId = req.user._id;
+    const { isbn } = req.params;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+    
+    try {
+        var reviews = await Review.find({ isbn: isbn }).sort({created_at: -1})
+
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
+
+// 추천 감상평 조회
+router.get('/rec', auth, async(req, res) => {
+    const userId = req.user._id;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+
+    try{
+        const categoryId = await UserCategory.find({ userId })
+            .then(result => result.map(item => item.categoryId))
+
+        var reviews = [];
+
+        if(categoryId && categoryId.length) { 
+            //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
+            reviews = await Review.find({ category: { $in: categoryId }});
+            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        } 
+        
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
+
+// 추천 감상평 조회
+router.get('/rec/:isbn', auth, async(req, res) => {
+    const userId = req.user._id;
+    const { isbn } = req.params;
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            error: "User not authenticated",
+        });
+    }
+
+    try{
+        const categoryId = await UserCategory.find({ userId })
+            .then(result => result.map(item => item.categoryId))
+
+        var reviews = [];
+
+        if(categoryId && categoryId.length) { 
+            //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
+            reviews = await Review.find({ isbn: isbn, category: { $in: categoryId }});
+            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        } 
+        
+        return res.status(200).json({
+            success: true,
+            reviews: reviews,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
+    }
+})
 
 // 특정 리뷰 조회
 router.get("/:reviewId", auth, async (req, res) => {

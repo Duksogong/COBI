@@ -5,7 +5,10 @@ import TestSearch from "./components/views/TestPage/TestSearch";
 import TestSearchReviews from "./components/views/TestPage/TestSearchReviews";
 import TestAdvice from './components/views/TestPage/TestAdvice';
 import TestMyReview from "./components/views/TestPage/TestMyReview";
+import Test from "./components/views/TestPage/TestPage";
 
+import SearchPage from "./components/views/SearchPage/SearchBook";
+import SearchReviewPage from "./components/views/SearchPage/SearchReview";
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
 import LoginPage from "./components/views/LoginPage/LoginPage";
@@ -18,6 +21,7 @@ import ChangePasswordPage from "./components/views/ChangePage/ChangePasswordPage
 import ChangeCategoryPage from "./components/views/CategoryPage/CategoryPage";
 
 import MyBookmarkPage from "./components/views/MyBookmarkPage/MyBookmarkPage";
+import MyReviewPage from "./components/views/MyReivewPage/MyReviewPage";
 
 import ReviewDetailPage from "./components/views/ReviewDetailPage/ReviewDetailPage";
 import PostReviewPage from "./components/views/PostReviewPage/PostReviewPage";
@@ -26,10 +30,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/test" element={<Test />} />
         <Route path="/test/advice" element={<TestAdvice />} />
         <Route path="/test/search" element={<TestSearch />} />
         <Route path="/test/searchReviews" element={<TestSearchReviews />} />
         <Route path="/test/myReview" element={<TestMyReview />} />
+
+        <Route path="/search/:searchText" element={<SearchPage />} />
+        <Route path="/search/review/:isbn" element={<SearchReviewPage />} />
           
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -42,7 +50,8 @@ function App() {
         <Route path="/change_category" element={<ChangeCategoryPage />} />
 
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
-          
+        <Route path="/my_review" element={<MyReviewPage />} />
+
         <Route path="/post_review" element={<PostReviewPage />} />
 
         <Route path="/review_detail/:reviewId/:currentUser" element={<ReviewDetailPage />} />

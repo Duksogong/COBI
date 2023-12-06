@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { searchBook, searchReview } from "../../../_actions/search_action"
+import { searchBookTitle } from "../../../_actions/search_action"
 
 function TestSearchPage() {
   const navigate = useNavigate()
@@ -26,7 +26,7 @@ function TestSearchPage() {
       query: searchText,
     }
 
-    dispatch(searchBook(body))
+    dispatch(searchBookTitle(body))
       .then(response => {
         if(response.payload.success) {
           setSearchResults(response.payload.result.items)
@@ -38,13 +38,6 @@ function TestSearchPage() {
     event.preventDefault()
 
     let book = searchResults[index]
-
-    dispatch(searchReview(book))
-      .then(response => {
-        if(response.payload.success) {
-          navigate('/test/searchReviews')
-        }
-      })
   }
 
   return (
