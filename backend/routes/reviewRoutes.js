@@ -107,7 +107,7 @@ router.get("/user", auth, async (req, res) => {
 });
 
 // 피드 감상평 조회
-router.get('/feed', auth, async (req, res) => {
+router.get("/feed", auth, async (req, res) => {
     const userId = req.user._id;
     if (!userId) {
         return res.status(401).json({
@@ -115,24 +115,24 @@ router.get('/feed', auth, async (req, res) => {
             error: "User not authenticated",
         });
     }
-    
+
     try {
-        var reviews = await Review.find({}).sort({created_at: -1})
+        var reviews = await Review.find({}).sort({ created_at: -1 });
 
         return res.status(200).json({
             success: true,
             reviews: reviews,
-        })
+        });
     } catch (err) {
         return res.status(500).json({
             success: false,
             error: err.message,
         });
     }
-})
+});
 
 // 피드 감상평 조회
-router.get('/feed/:isbn', auth, async (req, res) => {
+router.get("/feed/:isbn", auth, async (req, res) => {
     const userId = req.user._id;
     const { isbn } = req.params;
     if (!userId) {
@@ -141,24 +141,26 @@ router.get('/feed/:isbn', auth, async (req, res) => {
             error: "User not authenticated",
         });
     }
-    
+
     try {
-        var reviews = await Review.find({ isbn: isbn }).sort({created_at: -1})
+        var reviews = await Review.find({ isbn: isbn }).sort({
+            created_at: -1,
+        });
 
         return res.status(200).json({
             success: true,
             reviews: reviews,
-        })
+        });
     } catch (err) {
         return res.status(500).json({
             success: false,
             error: err.message,
         });
     }
-})
+});
 
 // 추천 감상평 조회
-router.get('/rec', auth, async(req, res) => {
+router.get("/rec", auth, async (req, res) => {
     const userId = req.user._id;
     if (!userId) {
         return res.status(401).json({
@@ -167,32 +169,35 @@ router.get('/rec', auth, async(req, res) => {
         });
     }
 
-    try{
-        const categoryId = await UserCategory.find({ userId })
-            .then(result => result.map(item => item.categoryId))
+    try {
+        const categoryId = await UserCategory.find({ userId }).then((result) =>
+            result.map((item) => item.categoryId)
+        );
 
         var reviews = [];
 
-        if(categoryId && categoryId.length) { 
+        if (categoryId && categoryId.length) {
             //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
-            reviews = await Review.find({ category: { $in: categoryId }});
-            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        } 
-        
+            reviews = await Review.find({ category: { $in: categoryId } });
+            reviews.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+        }
+
         return res.status(200).json({
             success: true,
             reviews: reviews,
-        })
+        });
     } catch (err) {
         return res.status(500).json({
             success: false,
             error: err.message,
         });
     }
-})
+});
 
 // 추천 감상평 조회
-router.get('/rec/:isbn', auth, async(req, res) => {
+router.get("/rec/:isbn", auth, async (req, res) => {
     const userId = req.user._id;
     const { isbn } = req.params;
     if (!userId) {
@@ -202,29 +207,35 @@ router.get('/rec/:isbn', auth, async(req, res) => {
         });
     }
 
-    try{
-        const categoryId = await UserCategory.find({ userId })
-            .then(result => result.map(item => item.categoryId))
+    try {
+        const categoryId = await UserCategory.find({ userId }).then((result) =>
+            result.map((item) => item.categoryId)
+        );
 
         var reviews = [];
 
-        if(categoryId && categoryId.length) { 
+        if (categoryId && categoryId.length) {
             //카테고리가 있는 경우, 해당 카테고리 감상평을 최신순으로...
-            reviews = await Review.find({ isbn: isbn, category: { $in: categoryId }});
-            reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        } 
-        
+            reviews = await Review.find({
+                isbn: isbn,
+                category: { $in: categoryId },
+            });
+            reviews.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+        }
+
         return res.status(200).json({
             success: true,
             reviews: reviews,
-        })
+        });
     } catch (err) {
         return res.status(500).json({
             success: false,
             error: err.message,
         });
     }
-})
+});
 
 // 특정 리뷰 조회
 router.get("/:reviewId", auth, async (req, res) => {
@@ -354,6 +365,52 @@ router.delete("/:reviewId", auth, async (req, res) => {
             success: false,
             error: err.message,
         });
+    }
+});
+
+// router.get("/images", async (req, res) => {
+//     try {
+//         const { imageIds } = req.query;
+
+//         // imageIds가 존재하면 쉼표로 분리하여 배열로 변환
+//         const imageIdsArray = imageIds ? imageIds.split(",") : [];
+
+//         // imageIds 배열에 포함된 이미지 ID로 이미지를 조회
+//         const images = await Image.find({ _id: { $in: imageIdsArray } });
+
+//         if (!images) {
+//             return res.status(404).json({ error: "Images not found" });
+//         }
+
+//         res.json(images);
+//     } catch (error) {
+//         console.error("Error fetching images:", error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
+
+router.get("/images/:id", async (req, res) => {
+    try {
+        const imageIds = req.params.id.split(",");
+        console.log(imageIds);
+
+        const images = await Image.find({ _id: { $in: imageIds } });
+        console.log(images);
+
+        if (!images || images.length === 0) {
+            return res.status(404).send("Images not found");
+        }
+
+        const imageData = images.map((image) => ({
+            contentType: image.image.contentType,
+            data: image.image.data?.toString("base64"),
+        }));
+        console.log(imageData);
+
+        res.json(imageData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
