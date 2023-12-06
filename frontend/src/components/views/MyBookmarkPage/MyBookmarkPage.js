@@ -111,13 +111,14 @@ function MyBookmarkPage() {
 
   // 북마크된 리뷰 object가져오기
   useEffect(() => {
+    setDetails([]);
     selectedBookMarks.map(s => {
     // reviews에서 해당 리뷰를 찾아서 가져옴
     const foundReview = reviews.find(review => review._id === s.reviewId);
     if (foundReview) {
         setDetails(details => [...details, foundReview]);
     }
-    }); 
+    });  
   }, [selectedBookMarks]);
     
   /* 유저의 북마크 리뷰 */
