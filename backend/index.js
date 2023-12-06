@@ -26,11 +26,11 @@ mongoose
     .then(() => console.log("MongoDB 연결됨..."))
     .catch((err) => console.log(err));
 
-const searchRoutes = require("./routes/searchRoutes");
-app.use("/api/search", searchRoutes);
-
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
+
+const searchRoutes = require("./routes/searchRoutes");
+app.use("/api/search", searchRoutes);
 
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/api/review", reviewRoutes);
@@ -40,6 +40,7 @@ app.use("/api/users", categoryRoutes);
 
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 app.use("/api/users", bookmarkRoutes);
+
 const commentRoutes = require("./routes/commentRoutes"); 
 app.use("/api/comments", commentRoutes); 
 
@@ -49,8 +50,8 @@ app.listen(port, () => {
 });
 
 const { User } = require("./models/User");
-
 const { auth } = require("./middleware/auth");
+
 const { Comment } = require("./models/Comment");
 //const { Reply } = require("./models/Reply");
 

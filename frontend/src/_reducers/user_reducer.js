@@ -1,6 +1,7 @@
 import {
     LOGIN_USER, 
     REGISTER_USER,
+    FIND_USER,
 } from '../_actions/types';
 
 export default function userReducer(state={}, action) {
@@ -11,6 +12,8 @@ export default function userReducer(state={}, action) {
         case REGISTER_USER:
             return { ...state, register: action.payload }
             break;
+        case FIND_USER:
+            return { ...state, success: action.payload };
         default:
             return state;
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { myReview } from '../../../_actions/myReview_action'
+//import { myReview } from '../../../_actions/myReview_action'
 
 function TestMyReviewPage() {
   const dispatch = useDispatch()
@@ -10,12 +10,12 @@ function TestMyReviewPage() {
 
   //화면 초기화
   useEffect(() => {
-    dispatch(myReview())
-      .then(response => {
-        if(response.payload && response.payload.length !== 0) {
-          setReviewList(response.payload)
-        }
-      })
+    // dispatch(myReview())
+    //   .then(response => {
+    //     if(response.payload && response.payload.length !== 0) {
+    //       setReviewList(response.payload)
+    //     }
+    //   })
   }, [])
 
   //option에 따른 정렬
