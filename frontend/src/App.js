@@ -26,6 +26,10 @@ import MyReviewPage from "./components/views/MyReivewPage/MyReviewPage";
 import ReviewDetailPage from "./components/views/ReviewDetailPage/ReviewDetailPage";
 import PostReviewPage from "./components/views/PostReviewPage/PostReviewPage";
 
+import CommentList from "./components/views/CommentPage/CommentList";
+import CommentForm from "./components/views/CommentPage/CommentForm";
+import CommentPage from "./components/views/CommentPage/CommentPage"; 
+
 function App() {
   return (
     <BrowserRouter>
@@ -35,26 +39,24 @@ function App() {
         <Route path="/test/search" element={<TestSearch />} />
         <Route path="/test/searchReviews" element={<TestSearchReviews />} />
         <Route path="/test/myReview" element={<TestMyReview />} />
-
         <Route path="/search/:searchText" element={<SearchPage />} />
         <Route path="/search/review/:isbn" element={<SearchReviewPage />} />
-          
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<HomePage />} />
-
         <Route path="/change_nickname" element={<ChangeNicknamePage />} />
         <Route path="/change_password" element={<ChangePasswordPage />} />
-
         <Route path="/change_category" element={<ChangeCategoryPage />} />
-
         <Route path="/my_bookmark" element={<MyBookmarkPage />} />
-        <Route path="/my_review" element={<MyReviewPage />} />
-
         <Route path="/post_review" element={<PostReviewPage />} />
-
         <Route path="/review_detail/:reviewId/:userId" element={<ReviewDetailPage />} />
+        <Route path="/comments" element={<CommentPage />}>
+          <Route index element={<CommentList />} />
+        </Route>
+        <Route path="/post_comment" element={<CommentForm />} /> 
+        <Route path="/my_review" element={<MyReviewPage />} />
+        <Route path="/post_review" element={<PostReviewPage />} />
       </Routes>
     </BrowserRouter>
   );
