@@ -192,12 +192,12 @@ function HomePage() {
                         alt="Image Alt Text">
                     </Card.Img>
                     <div style={{ marginTop:'10px' }}>
-                        <Card.Title>{review?.title ? review?.title : 'untitled'}</Card.Title>
-                        <Card.Text>{review.review.length > 150 ? (<>{`${review.review.slice(0, 150)}... `}<br />더보기</>) : review.review}</Card.Text>
+                        <Card.Title style={{ whiteSpace: 'nowrap', overflow:'hidden', textOverflow: 'ellipsis' }}>{review?.title ? review?.title : 'untitled'}</Card.Title>
+                        <Card.Text>{review.review.length > 150 ? (<>{`${review.review.slice(0, 150)}... `}<br /><span style={{ color:'#808080', fontSize:'12px' }}>더보기</span></>) : review.review}</Card.Text>
                     </div>
                 </Card.Body>
                 <Card.Footer 
-                style={{ borderTop:'solid 1px #dcdcdc', position: 'relative' }}>
+                style={{ borderTop:'solid 1px #dcdcdc', position: 'relative', display:'flex', alignItems:'center' }}>
                     <FaRegCommentDots onClick={() => onCommentHandler(review._id)} />
                     <span className='text-muted' style={{ fontSize:'12px', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
                       카테고리: {categories.find(category => category._id === review.category)?.name || '기타'}
