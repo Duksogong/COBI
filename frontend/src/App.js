@@ -54,7 +54,7 @@ function App() {
 
         <Route path="/post_review" element={<PostReviewPage />} />
 
-        <Route path="/review_detail/:reviewId/:currentUser" element={<ReviewDetailPage />} />
+        <Route path="/review_detail/:reviewId/:userId" element={<ReviewDetailPage />} />
       </Routes>
     </BrowserRouter>
   );

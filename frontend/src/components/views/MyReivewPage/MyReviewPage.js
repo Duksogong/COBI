@@ -153,7 +153,7 @@ function MyReviewPage() {
           )}
 
           {reviews.length > 0 && reviews.map((result, idx) => (
-            <Card key={idx} onClick={() => onClickHandler(result._id, currentUserId)}
+            <Card key={idx} onClick={() => onClickHandler(result._id, currentUser._id)}
             style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.3)', margin:'10px', marginBottom:'20px', border:'none' }}>
               <div style={{padding: '10px'}}>
                 <div style={{display: "flex", flexDirection:"row"}}> 
